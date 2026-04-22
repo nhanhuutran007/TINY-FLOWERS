@@ -1,0 +1,305 @@
+/* Modern Gent POS - Auth Styles Adapted for TINY-FLOWERS */
+
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --success-color: #27ae60;
+    --danger-color: #e74c3c;
+    --warning-color: #f39c12;
+    --info-color: #16a085;
+
+    /* Background Colors */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #F2F6FA;
+
+    /* Text Colors */
+    --text-primary: #3B4758;
+    --text-secondary: #586A84;
+    --text-tertiary: #7D8FA9;
+
+    /* Border Colors */
+    --border-color: #EEF0F4;
+    --border-secondary: #7D8FA9;
+
+    /* Input Colors */
+    --input-bg: #F2F6FA;
+    --input-focus-bg: #e8f0f8;
+    --input-text: #3B4758;
+    --input-placeholder: #7D8FA9;
+}
+
+body.auth-body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #E5F3FF 0%, #FFFFFF 100%);
+    min-height: 100vh;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-y: auto !important;
+    overflow-x: hidden;
+    position: relative;
+}
+
+body.auth-body::before {
+    content: '';
+    position: fixed;
+    top: -300px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3000px;
+    height: 1200px;
+    background: white;
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Logo */
+.auth-logo {
+    position: absolute;
+    top: 30px;
+    left: 40px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 10;
+}
+
+.auth-logo-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-logo-text {
+    font-size: 18px;
+    color: #586A84;
+    font-weight: 400;
+}
+
+/* Auth Container */
+.auth-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+    z-index: 10;
+}
+
+.auth-container h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #3B4758;
+    margin-bottom: 30px;
+    margin-top: 0;
+}
+
+/* Google Button */
+.google-btn {
+    width: 100%;
+    height: 48px;
+    border: 1px solid #7D8FA9;
+    background: white;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #3B4758;
+    transition: all 0.3s;
+    margin-bottom: 20px;
+}
+
+.google-btn:hover:not(:disabled) {
+    background: #f8f9fa;
+}
+
+.google-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Divider */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    gap: 15px;
+}
+
+.auth-divider-line {
+    flex: 1;
+    height: 1px;
+    background: #EEF0F4;
+}
+
+.auth-divider-text {
+    color: #586A84;
+    font-size: 14px;
+}
+
+/* Form Elements */
+.auth-form-group {
+    margin-bottom: 20px;
+}
+
+.auth-form-group label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: #3B4758;
+    margin-bottom: 8px;
+}
+
+.auth-form-group input[type="text"],
+.auth-form-group input[type="email"],
+.auth-form-group input[type="password"] {
+    width: 100%;
+    height: 40px;
+    background: var(--input-bg);
+    border: none;
+    border-radius: 6px;
+    padding: 0 20px;
+    font-size: 14px;
+    color: var(--input-text);
+    outline: none;
+    transition: all 0.3s;
+    box-sizing: border-box;
+}
+
+.auth-form-group input:focus {
+    background: var(--input-focus-bg);
+    box-shadow: 0 0 0 2px rgba(49, 157, 255, 0.2);
+}
+
+/* Password Wrapper */
+.password-wrapper {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #3B4758;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Remember & Forgot */
+.remember-forgot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.remember-me label {
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+    cursor: pointer;
+    color: #3B4758;
+}
+
+.forgot-password {
+    color: #319DFF;
+    font-size: 14px;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.forgot-password:hover {
+    opacity: 0.8;
+}
+
+/* Auth Buttons */
+.auth-btn {
+    width: 100%;
+    height: 48px;
+    background: #319DFF;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 30px;
+}
+
+.auth-btn:hover {
+    background: #2589e6;
+}
+
+/* Auth Links */
+.auth-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #586A84;
+}
+
+.auth-link a {
+    color: #319DFF;
+    text-decoration: none;
+    margin-left: 5px;
+}
+
+.auth-link a:hover {
+    text-decoration: underline;
+}
+
+/* Terms Checkbox */
+.terms-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 20px 0;
+}
+
+.terms-checkbox label {
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+    cursor: pointer;
+    color: #3B4758;
+}
+
+.terms-checkbox a {
+    color: #319DFF;
+    text-decoration: none;
+}
+
+.error-message {
+    background: #fee;
+    color: #c33;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    border-left: 3px solid #c33;
+}

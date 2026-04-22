@@ -1,0 +1,3 @@
+# Đặt các Repository class tại đây
+# Mỗi repository tương ứng với một bảng DB
+# Ví dụ: UserRepository.php, OrderRepository.php
