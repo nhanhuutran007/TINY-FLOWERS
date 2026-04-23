@@ -1,75 +1,97 @@
-# TINY-FLOWERS# TINY FLOWERS - Hệ Thống Quản Lý Cửa Hàng Thời Trang Nam
+# 🌸 TINY FLOWERS - Fashion & Streetwear Shop
 
-## 👔 Giới Thiệu Dự Án
-**TINY FLOWERS** (Định hướng: Cửa hàng Thời trang Nam) là một ứng dụng web quản lý bán hàng chuyên nghiệp dành cho các thương hiệu thời trang nam giới. Dự án được xây dựng trên nền tảng framework Laravel theo kiến trúc **MVC** (Model-View-Controller), tập trung vào phong cách tối giản, sang trọng và trải nghiệm mua sắm mượt mà.
-
----
-
-## 📂 Cấu Trúc Thư Mục Dự Án
-Dự án tuân thủ cấu trúc chuẩn của Laravel để đảm bảo tính bảo mật và khả năng mở rộng:
-
-- **`app/`**: Chứa logic nghiệp vụ chính (Controllers xử lý đơn hàng, Models sản phẩm thời trang).
-- **`bootstrap/`**: Chứa các file khởi tạo và cache của hệ thống.
-- **`config/`**: Lưu trữ các file cấu hình ứng dụng (Database, Session, Mail...).
-- **`database/`**: Quản lý cơ sở dữ liệu qua các file Migrations (Bảng sản phẩm, size, màu sắc) và Seeders.
-- **`public/`**: **Web Root** - Chứa các tài nguyên tĩnh công khai (CSS giao diện, JS, Hình ảnh sản phẩm, `.htaccess`).
-- **`resources/views/`**: Chứa giao diện người dùng (Blade templates cho trang chủ, bộ sưu tập, chi tiết sản phẩm).
-- **`routes/`**: Định nghĩa các đường dẫn URL của ứng dụng (`web.php`).
-- **`storage/`**: Lưu trữ hình ảnh sản phẩm, logs và các tệp tạm thời.
-- **`vendor/`**: Chứa các thư viện của bên thứ ba được quản lý bởi Composer.
+**Tiny Flowers** là một nền tảng thương mại điện tử chuyên biệt về thời trang Streetwear dành cho giới trẻ (Gen Z). Dự án được xây dựng với phong cách thiết kế tối giản, hiện đại, tập trung vào trải nghiệm hình ảnh và chuyển động sinh động để thu hút khách hàng.
 
 ---
 
-## 🚀 Các Chức Năng Dự Kiến
-Hệ thống quản lý thời trang nam bao gồm các module chính:
+## 🚀 Tính năng nổi bật
 
-1.  **Hệ Thống Xác Thực (Auth)**:
-    - [x] Giao diện Đăng nhập sang trọng dành cho khách hàng/quản trị.
-    - [x] Giao diện Đăng ký thành viên mới.
-    - [ ] Tích hợp đăng nhập mạng xã hội (Google, Facebook).
-2.  **Quản Lý Sản Phẩm (Inventory)**:
-    - Quản lý danh mục (Áo sơ mi, Quần tây, Suit, Phụ kiện).
-    - Quản lý biến thể sản phẩm (Size: S, M, L, XL; Màu sắc).
-3.  **Quản Lý Đơn Hàng (Orders)**:
-    - Giỏ hàng, thanh toán và theo dõi tình trạng đơn hàng.
-4.  **Bảng Điều Khiển (Admin Dashboard)**:
-    - Thống kê doanh thu theo mùa, quản lý kho hàng và khách hàng thân thiết.
-5.  **Marketing & Khuyến Mãi**:
-    - Quản lý mã giảm giá (Coupon) và các chương trình ưu đãi.
+- **Giao diện hiện đại (Modern UI):** Thiết kế theo phong cách tối giản, sử dụng hệ màu tinh tế, bo góc mềm mại và các hiệu ứng micro-interaction cao cấp.
+- **Video Lookbook:** Tích hợp video thực tế giúp khách hàng cảm nhận rõ nét phom dáng và chuyển động của sản phẩm qua ống kính Cinema.
+- **Style Explorer Carousel:** Thanh trượt phong cách tự động (Infinite Loop) với tính năng dừng khi di chuột, giúp khám phá đa dạng cách phối đồ.
+- **Dashboard Search:** Thanh tìm kiếm thông minh được thiết kế theo phong cách quản trị hiện đại, tích hợp ngay tại header.
+- **Custom Pagination:** Hệ thống phân trang được thiết kế riêng biệt, đồng bộ với phong cách tối giản của thương hiệu.
+- **SEO Optimized:** Cấu trúc HTML semantic, tối ưu hóa thẻ Meta và Title cho các công cụ tìm kiếm.
 
 ---
 
-## 💻 Hướng Dẫn Chạy Trên XAMPP (Local)
+## 📂 Cấu trúc thư mục dự án
 
-Để chạy dự án trên máy tính cá nhân, hãy làm theo các bước sau:
+```text
+TINY-FLOWERS/
+├── mvc-project/                 # Thư mục chính của mã nguồn Laravel
+│   ├── app/                     # Logic nghiệp vụ (Models, Controllers, Middleware)
+│   ├── config/                  # Các tệp cấu hình hệ thống
+│   ├── database/                # Migrations & Seeders (Dữ liệu mẫu sản phẩm)
+│   ├── public/                  # Tài nguyên công khai
+│   │   ├── css/                 # Các file style (welcome.css, shop.css, ...)
+│   │   ├── images/              # Kho tài nguyên hình ảnh & video đã tối ưu
+│   │   │   └── source/          # Media chính thức (Lookbook, Style, Products)
+│   │   └── js/                  # Các script xử lý tương tác
+│   ├── resources/               # Giao diện (Blade Templates)
+│   │   └── views/
+│   │       ├── welcome.blade.php # Trang chủ với Lookbook & Sliders
+│   │       ├── shop/            # Trang danh sách sản phẩm & lọc
+│   │       └── vendor/          # Custom Pagination (custom.blade.php)
+│   ├── routes/                  # Định nghĩa đường dẫn (web.php)
+│   └── .env                     # Cấu hình môi trường (Database, App URL)
+└── README.md                    # Tài liệu hướng dẫn dự án
+```
 
-1.  **Chuẩn bị**: Copy thư mục dự án vào `C:\xampp\htdocs\TINY-FLOWERS`.
-2.  **Khởi động XAMPP**: Start **Apache** và **MySQL**.
-3.  **Cấu hình .env**: 
-    - Đảm bảo `SESSION_DRIVER=file` để test giao diện không cần DB.
-    - Cấu hình thông tin kết nối DB tại các dòng `DB_DATABASE`, `DB_USERNAME`.
-4.  **Truy cập trình duyệt**:
-    - Trang chủ: `http://localhost/TINY-FLOWERS/mvc-project/public/`
-    - Trang Đăng nhập: `http://localhost/TINY-FLOWERS/mvc-project/public/login`
-    - Trang Đăng ký: `http://localhost/TINY-FLOWERS/mvc-project/public/register`
+---
+
+## 🛠 Công nghệ sử dụng
+
+- **Backend:** PHP 8.x, Laravel Framework.
+- **Database:** MySQL / MariaDB.
+- **Frontend:** HTML5, CSS3 (Vanilla CSS), JavaScript (Vanilla JS).
+- **Icons:** Font Awesome 6.
+- **Fonts:** Google Fonts (Inter).
 
 ---
 
-## 🌐 Triển Khai Hosting & Tên Miền (Trong Tương Lai)
+## 🔧 Hướng dẫn cài đặt
 
-Khi bạn muốn đưa cửa hàng thời trang của mình lên internet:
+1. **Clone dự án:**
+   ```bash
+   git clone https://github.com/nhanhuutran007/TINY-FLOWERS.git
+   ```
 
-### 1. Chuẩn bị Hosting
-- Sử dụng hosting hỗ trợ PHP 8.1+ và MySQL.
-- Upload toàn bộ mã nguồn (trừ `node_modules` và `tests`).
+2. **Cấu hình môi trường:**
+   - Di chuyển vào thư mục `mvc-project`.
+   - Copy file `.env.example` thành `.env`.
+   - Cấu hình thông tin Database (DB_DATABASE, DB_USERNAME, DB_PASSWORD).
 
-### 2. Cấu hình Tên Miền (Domain)
-- **Document Root**: Phải trỏ trực tiếp vào thư mục `/public/` của dự án để đảm bảo bảo mật mã nguồn phía sau.
-- *Ví dụ:* `mensfashion.com` -> `/public_html/mvc-project/public`.
+3. **Cài đặt thư viện:**
+   ```bash
+   composer install
+   npm install && npm run dev
+   ```
 
-### 3. Tối ưu vận hành
-- Chạy các lệnh tối ưu: `php artisan config:cache`, `php artisan route:cache`.
-- Gắn **SSL** (HTTPS) là bắt buộc để khách hàng tin tưởng khi thanh toán online.
+4. **Khởi tạo dữ liệu mẫu:**
+   ```bash
+   php artisan migrate --seed
+   ```
+
+5. **Chạy server:**
+   ```bash
+   php artisan serve
+   ```
 
 ---
-*Dự án được xây dựng nhằm mang lại phong cách thời trang lịch lãm cho phái mạnh.*
+
+## 🖼 Quản lý Media
+
+Dự án sử dụng cấu trúc thư mục Media đã được tối ưu hóa tại `public/images/source/`:
+- **Products:** Phân loại theo mã form (F1, F2, F5).
+- **VideoLookbook:** Các tệp video mp4 chất lượng cao.
+- **WeekendVibesSection:** Ảnh đại diện cho các phong cách Minimalism, Relax, Sport.
+- **StyleSetSection:** Các bộ phối đồ thực tế.
+
+---
+
+## ✍️ Tác giả
+Dự án được phát triển bởi **nhanhuutran007** với tâm huyết mang lại một làn gió mới cho thời trang Streetwear Việt Nam.
+
+---
+*&copy; 2026 Tiny Flowers. All rights reserved. Made with ❤️ in Vietnam.*
