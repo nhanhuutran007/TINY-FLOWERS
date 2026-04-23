@@ -10,10 +10,17 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\OrderController;
+
+use App\Http\Controllers\ShopController;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    $products = \App\Models\Product::with('category')->where('status', 1)->latest()->take(8)->get();
+    return view('welcome', compact('products'));
+})->name('home');
+
+Route::get('/shop', [ShopController::class, 'index'])->name('shop');
+Route::get('/collections', [ShopController::class, 'collections'])->name('collections');
 
 // LOGIN ROUTES
 Route::get('/login', function () {
@@ -75,6 +82,7 @@ Route::get('/logout', function() {
 // Các route quản lý khác (Tạm thời bỏ middleware để bạn dễ test giao diện)
 Route::resource('categories', CategoryController::class);
 Route::resource('products', ProductController::class);
+Route::resource('orders', OrderController::class);
 Route::resource('customers', CustomerController::class);
 Route::resource('users', UserController::class);
 Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');

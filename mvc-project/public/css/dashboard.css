@@ -83,9 +83,14 @@ body.dashboard-body {
 /* Main Content */
 .main-content {
     flex: 1;
-    margin-left: 280px;
+    margin-left: 200px;   /* matches sidebar width */
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+    padding: 12px 12px 12px 12px;  /* outer spacing around cards */
+    gap: 0;
+    background-color: var(--dash-bg);
+    box-sizing: border-box;
 }
 
 /* Topbar */
@@ -137,7 +142,8 @@ body.dashboard-body {
 
 /* Page Content */
 .page-content {
-    padding: 40px;
+    padding: 20px 24px 40px;
+    flex: 1;
 }
 
 /* Tabs */

@@ -1,0 +1,393 @@
+/* ============================================
+   TOP BAR — Kích thước chính xác từ nguon.txt XAML
+   Topbar rect: height=80px, border-radius=12px
+   ============================================ */
+
+:root {
+  --topbar-white:         rgba(255, 255, 255, 1);
+  --topbar-inputbg:       rgba(242, 246, 250, 1);
+  --topbar-grey-600:      rgba(125, 143, 169, 1);
+  --topbar-grey-700:      rgba(88,  106, 132, 1);
+  --topbar-grey-900:      rgba(29,  35,  44,  1);
+  --topbar-primary-600:   rgba(49,  157, 255, 1);
+  --topbar-notif-red:     rgba(242, 22,  115, 1);
+  --topbar-warning-200:   rgba(255, 230, 181, 1);
+  --topbar-warning-600:   rgba(255, 170, 4,   1);
+  --topbar-shadow:        0px 4px 20px 0px rgba(170, 169, 184, 0.1);
+  --topbar-hover-shadow:  0px 4px 30px 0px rgba(170, 169, 184, 0.4);
+}
+
+/* ---- Top Bar Container (height=80px per XAML Rect) ---- */
+.top-bar {
+  display: flex;
+  width: 100%;
+  height: 80px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background-color: var(--topbar-white);
+  border-radius: 12px;
+  box-shadow: var(--topbar-shadow);
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+/* ---- LEFT: Hamburger + Search ---- */
+.top-bar .frame {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+  flex: 0 0 auto;
+}
+
+/* Icon buttons: 40×40px, border-radius 6px — từ XAML RectangleGeometry */
+.top-bar .top-bar-items {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0;
+  color: #586A84; /* exact SVG fill="#586A84" */
+  font-size: 18px;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.top-bar .top-bar-items:hover {
+  background-color: var(--topbar-inputbg);
+  box-shadow: var(--topbar-hover-shadow);
+}
+
+/* Search form: 260px wide, 40px tall, border-radius 6px — từ XAML path */
+.top-bar .inputs {
+  display: flex;
+  width: 260px;
+  height: 40px;
+  align-items: center;
+  gap: 4px;
+  padding: 0 10px;
+  background-color: var(--topbar-inputbg);
+  border-radius: 6px;
+  border: 0;
+  margin: 0;
+  box-sizing: border-box;
+  transition: box-shadow 0.2s ease;
+}
+
+.top-bar .inputs:focus-within {
+  box-shadow: inset 0 0 0 1.5px var(--topbar-primary-600);
+}
+
+/* Search icon: 20×20px — từ XAML */
+.top-bar .inputs .search-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--topbar-grey-600);
+  font-size: 14px;
+}
+
+/* Search input */
+.top-bar input.type-something {
+  display: block;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  outline: none;
+  font-family: "Roboto", Helvetica;
+  font-weight: 400;
+  color: var(--topbar-grey-700);
+  font-size: 14px;
+  letter-spacing: 0;
+  line-height: normal;
+}
+
+.top-bar input.type-something::placeholder {
+  color: var(--topbar-grey-600);
+  opacity: 1;
+}
+
+/* ---- RIGHT: Actions nav — gap 14px per XAML .div ---- */
+.top-bar .div {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  flex: 0 0 auto;
+}
+
+/* Language selector: height 40px, padding 0 4px — từ XAML */
+.top-bar .select-language {
+  display: inline-flex;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 5px 0 5px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+  flex: 0 0 auto;
+}
+
+.top-bar .select-language:hover {
+  background-color: var(--topbar-inputbg);
+}
+
+.top-bar .frame-2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+/* Flag: 21×15px — từ XAML RectangleGeometry Rect="0,0,21,15" */
+.top-bar .flag-icon {
+  display: inline-flex;
+  align-items: center;
+  width: 21px;
+  height: 15px;
+  font-size: 16px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* Language text */
+.top-bar .text-wrapper {
+  font-family: "Roboto", Helvetica;
+  font-weight: 400;
+  color: var(--topbar-grey-700);
+  font-size: 14px;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+/* Chevron: 16×16px — từ XAML icons-2 */
+.top-bar .chevron-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--topbar-grey-600);
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Theme switch: 44×24px, border-radius 12px — từ SVG rect fill="#FFE6B5" */
+.top-bar .switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background-color: #FFE6B5; /* exact SVG value */
+  border-radius: 12px;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background-color 0.3s ease;
+}
+
+/* Toggle knob: 20×20px circle — từ SVG circle fill="#FFAA04" */
+.top-bar .switch .ellipse {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 2px;
+  transform: translateY(-50%);
+  background-color: #FFAA04; /* exact SVG value */
+  border-radius: 50%;
+  transition: left 0.3s ease;
+}
+
+/* Sun icon INSIDE the knob (white) */
+.top-bar .switch .switch-sun-icon {
+  color: #ffffff;
+  font-size: 9px;
+}
+
+/* Moon icon on the RIGHT side of switch (white) */
+.top-bar .switch .switch-moon-icon {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ffffff;
+  font-size: 9px;
+  opacity: 0.8;
+}
+
+/* Notification button: 40×40px — từ XAML */
+.top-bar .top-bar-items-2 {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0;
+  color: var(--topbar-grey-700);
+  font-size: 18px;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.top-bar .top-bar-items-2:hover {
+  background-color: var(--topbar-inputbg);
+  box-shadow: var(--topbar-hover-shadow);
+}
+
+/* Notification red dot: 10×10px — từ XAML EllipseGeometry RadiusX/Y="5" */
+.top-bar .ellipse-2 {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: 7px;
+  right: 7px;
+  background-color: var(--topbar-notif-red);
+  border-radius: 50%;
+  border: 2px solid var(--topbar-white);
+}
+
+/* User avatar: 40×40px circle — từ XAML EllipseGeometry RadiusX/Y="20" */
+.top-bar .user-pic {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.top-bar .user-pic:hover {
+  box-shadow: 0 0 0 2px var(--topbar-primary-600);
+}
+
+.top-bar .user-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+/* Separator */
+.top-bar .nav-divider {
+  width: 1px;
+  height: 20px;
+  background-color: rgba(125, 143, 169, 0.25);
+  flex-shrink: 0;
+}
+
+/* Focus styles */
+.top-bar .top-bar-items:focus-visible,
+.top-bar .select-language:focus-visible,
+.top-bar .switch:focus-visible,
+.top-bar .top-bar-items-2:focus-visible,
+.top-bar .user-pic:focus-visible {
+  outline: 2px solid var(--topbar-primary-600);
+  outline-offset: 2px;
+}
+
+
+/* ============================================================
+   PAGE TITLE / BREADCRUMB BAR — nguon.txt SVG
+   SVG: width=1660, height=88, fill="#EEF0F4"
+   Title: Roboto Bold 24px, color #3B4758
+   Active tab: #319DFF + 2px bottom border
+   Inactive tab: #586A84
+   ============================================================ */
+
+.page-title-bar {
+  display: flex;
+  width: 100%;
+  height: 88px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;    /* horizontal padding to align with page content */
+  background-color: #EEF0F4;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+/* Title: Roboto Bold 24px, #3B4758 */
+.page-title-text {
+  font-family: "Roboto", Helvetica;
+  font-weight: 700;
+  font-size: 24px;
+  color: #3B4758;
+  letter-spacing: 0;
+  margin: 0;
+  padding: 0;
+  line-height: normal;
+}
+
+/* Submenu tabs container */
+.submenu-tabs {
+  display: inline-flex;
+  align-items: stretch;
+  height: 100%;
+  gap: 0;
+}
+
+/* Tab: 14px Roboto, inactive = #586A84 */
+.submenu-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 0 20px;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-family: "Roboto", Helvetica;
+  font-weight: 400;
+  font-size: 14px;
+  color: #586A84;
+  letter-spacing: 0;
+  white-space: nowrap;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.submenu-tab:hover {
+  color: #319DFF;
+}
+
+/* Active tab: #319DFF + 2px blue underline */
+.submenu-tab--active {
+  color: #319DFF;
+  border-bottom-color: #319DFF;
+  font-weight: 500;
+}
+
+.submenu-tab:focus-visible {
+  outline: 2px solid #319DFF;
+  outline-offset: -2px;
+}
