@@ -32,7 +32,7 @@ body.dashboard-body {
     flex-direction: column;
     position: fixed;
     height: 100vh;
-    z-index: 100;
+    z-index: 2000;
 }
 
 .sidebar-header {
@@ -87,7 +87,7 @@ body.dashboard-body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    padding: 12px 12px 12px 12px;  /* outer spacing around cards */
+    padding: 80px 12px 12px 12px;  /* 80px top padding for fixed topbar */
     gap: 0;
     background-color: var(--dash-bg);
     box-sizing: border-box;

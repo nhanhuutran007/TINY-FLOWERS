@@ -44,7 +44,7 @@
                         @forelse($products as $product)
                             <tr>
                                 <td>
-                                    <img src="{{ $product->image ? asset('uploads/products/' . $product->image) : 'https://placehold.co/40x40?text=No+Image' }}" 
+                                    <img src="{{ $product->image_url }}" 
                                          alt="" style="width: 40px; height: 40px; object-fit: cover; border-radius: 6px; border: 1px solid #e2e8f0;">
                                 </td>
                                 <td>
@@ -204,7 +204,7 @@
 
         function openEditProductModal(product) {
             pTitle.innerText = 'Chỉnh sửa sản phẩm';
-            pForm.action = `/products/${product.id}`;
+            pForm.action = `{{ url('products') }}/${product.id}`;
             pMethod.innerHTML = '@method("PUT")';
             
             document.getElementById('pBarcode').value = product.barcode;

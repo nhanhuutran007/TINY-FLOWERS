@@ -87,3 +87,9 @@ Route::resource('customers', CustomerController::class);
 Route::resource('users', UserController::class);
 Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
 Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+Route::get('/profile', [UserController::class, 'profile'])->name('profile.index');
+Route::post('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
+Route::get('/change-password', [UserController::class, 'changePasswordView'])->name('profile.password');
+Route::post('/change-password', [UserController::class, 'updatePassword'])->name('profile.password.update');
+
+Route::get('/api/stock-alerts', [\App\Http\Controllers\StockAlertController::class, 'index']);

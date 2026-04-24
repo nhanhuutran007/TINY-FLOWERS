@@ -2,63 +2,81 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function profile()
     {
-        //
+        // For development, we get the admin user since authentication is hardcoded
+        $user = User::where('email', 'admin@admin.com')->first();
+        return view('profile.index', compact('user'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function updateProfile(Request $request)
     {
-        //
+        $user = User::where('email', 'admin@admin.com')->first();
+
+        $request->validate([
+            'fullname' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->user_id . ',user_id',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        $user->fullname = $request->fullname;
+        $user->email = $request->email;
+
+        if ($request->hasFile('avatar')) {
+            // Delete old avatar if exists (custom logic for avatar if needed)
+            $imageName = time() . '.' . $request->avatar->extension();
+            $path = public_path('images/avatars');
+            
+            if (!File::isDirectory($path)) {
+                File::makeDirectory($path, 0777, true, true);
+            }
+            
+            $request->avatar->move($path, $imageName);
+            // Assuming there's an avatar or profile_picture column. 
+            // The seeder doesn't show one, so let's check User model.
+        }
+
+        $user->save();
+
+        // Update session
+        Session::put('user', [
+            'name' => $user->fullname,
+            'email' => $user->email,
+            'role' => $user->role
+        ]);
+
+        return back()->with('success', 'Cập nhật thông tin thành công!');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function changePasswordView()
     {
-        //
+        return view('profile.password');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function updatePassword(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:5|confirmed',
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        $user = User::where('email', 'admin@admin.com')->first();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không chính xác']);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return back()->with('success', 'Đổi mật khẩu thành công!');
     }
 }

@@ -68,7 +68,7 @@
             @foreach($products as $product)
                 <div class="product-card">
                     <div class="product-image">
-                        <img src="{{ Str::startsWith($product->image, 'source/') ? asset('images/' . $product->image) : asset('uploads/products/' . ($product->image ?: 'p1.png')) }}" alt="{{ $product->name }}">
+                        <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
                         <button class="add-cart-btn"><i class="fas fa-plus"></i></button>
                     </div>
                     <div class="product-details">

@@ -27,9 +27,12 @@ class ShopController extends Controller
 
     public function collections(Request $request)
     {
-        $products = Product::where('category_id', 'like', '%Set%')
-                          ->orWhere('name', 'like', '%Set%')
-                          ->orWhere('name', 'like', '%Combo%')
+        $products = Product::where('status', 1)
+                          ->where(function($q) {
+                              $q->where('category_id', 'like', '%Set%')
+                                ->orWhere('name', 'like', '%Set%')
+                                ->orWhere('name', 'like', '%Combo%');
+                          })
                           ->latest()->paginate(12);
         
         $title = 'Bộ sưu tập Lookbook';

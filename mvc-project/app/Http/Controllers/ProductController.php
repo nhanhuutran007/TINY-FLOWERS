@@ -29,10 +29,17 @@ class ProductController extends Controller
         ]);
 
         $data = $request->all();
+        $data['status'] = $request->has('status') ? 1 : 0;
 
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('uploads/products'), $imageName);
+            $path = public_path('images');
+            
+            if (!File::isDirectory($path)) {
+                File::makeDirectory($path, 0777, true, true);
+            }
+            
+            $request->image->move($path, $imageName);
             $data['image'] = $imageName;
         }
 
@@ -54,18 +61,25 @@ class ProductController extends Controller
         ]);
 
         $data = $request->all();
+        $data['status'] = $request->has('status') ? 1 : 0;
 
         if ($request->hasFile('image')) {
             // Delete old image
             if ($product->image && $product->image !== 'default-product.png') {
-                $oldPath = public_path('uploads/products/' . $product->image);
+                $oldPath = public_path('images/' . $product->image);
                 if (File::exists($oldPath)) {
                     File::delete($oldPath);
                 }
             }
 
             $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('uploads/products'), $imageName);
+            $path = public_path('images');
+            
+            if (!File::isDirectory($path)) {
+                File::makeDirectory($path, 0777, true, true);
+            }
+            
+            $request->image->move($path, $imageName);
             $data['image'] = $imageName;
         }
 
@@ -77,7 +91,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         if ($product->image && $product->image !== 'default-product.png') {
-            $oldPath = public_path('uploads/products/' . $product->image);
+            $oldPath = public_path('images/' . $product->image);
             if (File::exists($oldPath)) {
                 File::delete($oldPath);
             }

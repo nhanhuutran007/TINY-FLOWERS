@@ -15,4 +15,13 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return 'https://placehold.co/400x400?text=No+Image';
+        }
+
+        return asset('images/' . $this->image);
+    }
 }

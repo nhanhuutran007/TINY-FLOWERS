@@ -14,7 +14,7 @@
     <header class="main-header">
         <div class="header-container">
             <a href="{{ route('home') }}" class="logo-area">
-                <div class="logo-circle">TF</div>
+                <img src="{{ asset('images/logo.png') }}" alt="Tiny Flowers" style="width: 40px; height: 40px; object-fit: contain; margin-right: 10px;">
                 <span class="brand-name">Tiny Flowers</span>
             </a>
 
@@ -61,7 +61,7 @@
                 <div class="hero-visual">
                     <div class="form-card">
                         <div class="form-img">
-                            <img src="{{ asset('uploads/products/p1.png') }}" alt="Form Boxy">
+                            <img src="{{ asset('images/p1.png') }}" alt="Form Boxy">
                         </div>
                         <div class="form-info">
                             <p class="form-id">F1 - FORM BOXY</p>
@@ -70,7 +70,7 @@
                     </div>
                     <div class="form-card" style="transform: translateY(30px);">
                         <div class="form-img">
-                            <img src="{{ asset('uploads/products/p2.png') }}" alt="Form Baggy">
+                            <img src="{{ asset('images/p2.png') }}" alt="Form Baggy">
                         </div>
                         <div class="form-info">
                             <p class="form-id">F2 - FORM BAGGY</p>
@@ -91,7 +91,7 @@
                 @forelse($products as $product)
                     <div class="product-card">
                         <div class="product-image">
-                            <img src="{{ Str::startsWith($product->image, 'source/') ? asset('images/' . $product->image) : asset('uploads/products/' . ($product->image ?: 'p1.png')) }}" alt="{{ $product->name }}">
+                            <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
                             <button class="add-cart-btn">
                                 <i class="fas fa-plus"></i>
                             </button>
