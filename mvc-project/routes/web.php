@@ -22,6 +22,11 @@ Route::get('/', function () {
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 Route::get('/collections', [ShopController::class, 'collections'])->name('collections');
 
+// CHECKOUT ROUTES
+Route::get('/checkout', [ShopController::class, 'checkout'])->name('checkout');
+Route::post('/checkout', [ShopController::class, 'processCheckout'])->name('checkout.process');
+Route::get('/checkout/success/{order}', [ShopController::class, 'checkoutSuccess'])->name('checkout.success');
+
 // LOGIN ROUTES
 Route::get('/login', function () {
     return view('auth.login');

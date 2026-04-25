@@ -281,7 +281,7 @@
                 <span>TỔNG TIỀN:</span>
                 <span class="cart-total-amount">0đ</span>
             </div>
-            <button class="checkout-btn">THANH TOÁN</button>
+            <a href="{{ route('checkout') }}" class="checkout-btn" style="display:block; text-align:center; text-decoration:none;">THANH TOÁN</a>
         </div>
     </div>
 
