@@ -12,14 +12,23 @@ class UserController extends Controller
 {
     public function profile()
     {
-        // For development, we get the admin user since authentication is hardcoded
-        $user = User::where('email', 'admin@admin.com')->first();
+        $user = \Illuminate\Support\Facades\Auth::user();
+        
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        if ($user->role === 'customer') {
+            return view('profile.customer', compact('user'));
+        }
+
         return view('profile.index', compact('user'));
     }
 
     public function updateProfile(Request $request)
     {
-        $user = User::where('email', 'admin@admin.com')->first();
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if (!$user) return redirect()->route('login');
 
         $request->validate([
             'fullname' => 'required|string|max:255',
@@ -40,8 +49,7 @@ class UserController extends Controller
             }
             
             $request->avatar->move($path, $imageName);
-            // Assuming there's an avatar or profile_picture column. 
-            // The seeder doesn't show one, so let's check User model.
+            $user->profile_picture = $imageName;
         }
 
         $user->save();
@@ -58,6 +66,13 @@ class UserController extends Controller
 
     public function changePasswordView()
     {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if (!$user) return redirect()->route('login');
+        
+        if ($user->role === 'customer') {
+            return view('profile.customer-password', compact('user'));
+        }
+        
         return view('profile.password');
     }
 
@@ -68,7 +83,8 @@ class UserController extends Controller
             'new_password' => 'required|min:5|confirmed',
         ]);
 
-        $user = User::where('email', 'admin@admin.com')->first();
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if (!$user) return redirect()->route('login');
 
         if (!Hash::check($request->current_password, $user->password)) {
             return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không chính xác']);
@@ -78,5 +94,48 @@ class UserController extends Controller
         $user->save();
 
         return back()->with('success', 'Đổi mật khẩu thành công!');
+    }
+
+    public function addressView()
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if (!$user) return redirect()->route('login');
+        
+        if ($user->role === 'customer') {
+            return view('profile.customer-address', compact('user'));
+        }
+        
+        return view('profile.index', compact('user'));
+    }
+
+    public function updateAddress(Request $request)
+    {
+        $request->validate([
+            'phone' => 'required|string|max:20',
+            'address' => 'required|string|max:255',
+        ]);
+
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if (!$user) return redirect()->route('login');
+
+        $user->phone = $request->phone;
+        $user->address = $request->address;
+        $user->save();
+
+        return back()->with('success', 'Cập nhật sổ địa chỉ thành công!');
+    }
+
+    public function ordersView()
+    {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        if (!$user) return redirect()->route('login');
+        
+        $orders = \App\Models\Order::with('items.product')->where('user_id', $user->user_id)->orderBy('created_at', 'desc')->get();
+        
+        if ($user->role === 'customer') {
+            return view('profile.customer-orders', compact('user', 'orders'));
+        }
+        
+        return view('profile.index', compact('user'));
     }
 }

@@ -12,15 +12,30 @@ class ShopController extends Controller
     {
         $query = Product::with('category')->where('status', 1);
 
-        if ($request->has('category')) {
+        if ($request->has('category') && $request->category != '') {
             $categoryName = $request->category;
             $query->whereHas('category', function($q) use ($categoryName) {
                 $q->where('name', 'like', '%' . $categoryName . '%');
             });
         }
 
+        if ($request->has('search') && $request->search != '') {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('min_price') && $request->min_price != '') {
+            $query->where('selling_price', '>=', $request->min_price);
+        }
+
+        if ($request->has('max_price') && $request->max_price != '') {
+            $query->where('selling_price', '<=', $request->max_price);
+        }
+
         $products = $query->latest()->paginate(15);
         $title = $request->category ?? 'Tất cả sản phẩm';
+        if ($request->has('search') && $request->search != '') {
+            $title = 'Kết quả tìm kiếm: ' . $request->search;
+        }
 
         return view('shop.index', compact('products', 'title'));
     }
@@ -37,5 +52,20 @@ class ShopController extends Controller
         
         $title = 'Bộ sưu tập Lookbook';
         return view('shop.index', compact('products', 'title'));
+    }
+
+    public function show($id)
+    {
+        $product = Product::with(['category', 'reviews.user'])->findOrFail($id);
+        
+        // Get related products from the same category
+        $relatedProducts = Product::where('category_id', $product->category_id)
+                                  ->where('id', '!=', $id)
+                                  ->where('status', 1)
+                                  ->inRandomOrder()
+                                  ->limit(4)
+                                  ->get();
+                                  
+        return view('shop.show', compact('product', 'relatedProducts'));
     }
 }

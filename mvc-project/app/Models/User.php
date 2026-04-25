@@ -24,6 +24,8 @@ class User extends Authenticatable
         'username',
         'fullname',
         'email',
+        'phone',
+        'address',
         'password',
         'role',
         'status',
@@ -56,4 +58,18 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'user_id', 'user_id');
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class, 'user_id', 'user_id');
+    }
+    public function orders()
+{
+    return $this->hasMany(\App\Models\Order::class, 'user_id', 'user_id');
+}
 }

@@ -9,15 +9,17 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
-        return view('categories.index', compact('categories'));
+        $categories = Category::with('parent')->get();
+        $parentCategories = Category::whereNull('parent_id')->get();
+        return view('categories.index', compact('categories', 'parentCategories'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|unique:categories|max:255',
-            'description' => 'nullable'
+            'description' => 'nullable',
+            'parent_id' => 'nullable|exists:categories,id'
         ]);
 
         Category::create($request->all());
@@ -29,7 +31,8 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|max:255|unique:categories,name,' . $category->id,
-            'description' => 'nullable'
+            'description' => 'nullable',
+            'parent_id' => 'nullable|exists:categories,id'
         ]);
 
         $category->update($request->all());

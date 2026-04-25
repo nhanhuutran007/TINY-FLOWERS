@@ -3,13 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
     public function index()
     {
-        $customers = Customer::latest()->get();
+        $customers = User::where('role', 'customer')
+            ->withCount('orders')
+            ->withSum('orders', 'total_amount')
+            ->latest('user_id')
+            ->get();
+            
         return view('customers.index', compact('customers'));
     }
 
@@ -39,9 +45,12 @@ class CustomerController extends Controller
         return redirect()->route('customers.index')->with('success', 'Cập nhật khách hàng thành công!');
     }
 
-    public function destroy(Customer $customer)
+    public function destroy($id)
     {
-        $customer->delete();
+        $user = User::findOrFail($id);
+        if ($user->role === 'customer') {
+            $user->delete();
+        }
         return redirect()->route('customers.index')->with('success', 'Xóa khách hàng thành công!');
     }
 }

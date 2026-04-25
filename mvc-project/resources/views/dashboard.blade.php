@@ -33,25 +33,25 @@
                 <div class="stat-card">
                     <div class="stat-header">
                         <div class="stat-icon" style="background: rgba(60, 80, 224, 0.1); color: var(--accent-blue)">
-                            <i class="fas fa-eye"></i>
+                            <i class="fas fa-coins"></i>
                         </div>
                     </div>
-                    <div class="stat-value">12,543</div>
-                    <div class="stat-label">Lượt xem trang</div>
+                    <div class="stat-value">₫ {{ number_format($totalRevenue) }}</div>
+                    <div class="stat-label">Tổng doanh thu</div>
                     <div class="trend-indicator trend-up">
-                        <i class="fas fa-arrow-up"></i> 12.5% <span>tháng này</span>
+                        <i class="fas fa-arrow-up"></i> <span>Dựa trên đơn hoàn thành</span>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-header">
                         <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--accent-green)">
-                            <i class="fas fa-coins"></i>
+                            <i class="fas fa-shopping-cart"></i>
                         </div>
                     </div>
-                    <div class="stat-value">₫ 45.2M</div>
-                    <div class="stat-label">Tổng lợi nhuận</div>
+                    <div class="stat-value">{{ number_format($totalOrders) }}</div>
+                    <div class="stat-label">Tổng đơn hàng</div>
                     <div class="trend-indicator trend-up">
-                        <i class="fas fa-arrow-up"></i> 8.2% <span>tháng này</span>
+                        <i class="fas fa-arrow-up"></i> <span>Tất cả trạng thái</span>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -60,10 +60,10 @@
                             <i class="fas fa-box"></i>
                         </div>
                     </div>
-                    <div class="stat-value">2,450</div>
+                    <div class="stat-value">{{ number_format($totalProducts) }}</div>
                     <div class="stat-label">Tổng sản phẩm</div>
-                    <div class="trend-indicator trend-down">
-                        <i class="fas fa-arrow-down"></i> 2.1% <span>tháng này</span>
+                    <div class="trend-indicator trend-up">
+                        <i class="fas fa-box-open"></i> <span>Sản phẩm đang bán</span>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -72,10 +72,10 @@
                             <i class="fas fa-users"></i>
                         </div>
                     </div>
-                    <div class="stat-value">1,205</div>
-                    <div class="stat-label">Khách hàng mới</div>
+                    <div class="stat-value">{{ number_format($totalCustomers) }}</div>
+                    <div class="stat-label">Khách hàng</div>
                     <div class="trend-indicator trend-up">
-                        <i class="fas fa-arrow-up"></i> 15.4% <span>tháng này</span>
+                        <i class="fas fa-users"></i> <span>Đã đăng ký</span>
                     </div>
                 </div>
             </div>
@@ -101,42 +101,22 @@
                         <h2 class="panel-title">Sản phẩm bán chạy</h2>
                     </div>
                     <div class="progress-list">
+                        @foreach($topSelling as $item)
                         <div class="progress-item">
                             <div class="progress-info">
-                                <span>Áo Sơ Mi Oxford</span>
-                                <span>₫ 12.5M</span>
+                                <span>{{ $item->product ? $item->product->name : 'Sản phẩm đã xóa' }}</span>
+                                <span>{{ number_format($item->total_sales) }}đ</span>
                             </div>
                             <div class="progress-bar-bg">
-                                <div class="progress-bar-fill" style="width: 85%"></div>
+                                @php
+                                    $percentage = min(100, max(5, ($item->total_quantity / 100) * 100));
+                                    $colors = ['#3C50E0', '#10B981', '#F0950C', '#ef4444', '#8B5CF6'];
+                                    $color = $colors[$loop->index % 5];
+                                @endphp
+                                <div class="progress-bar-fill" style="width: {{ $percentage }}%; background: {{ $color }}"></div>
                             </div>
                         </div>
-                        <div class="progress-item">
-                            <div class="progress-info">
-                                <span>Quần Tây Slim Fit</span>
-                                <span>₫ 8.2M</span>
-                            </div>
-                            <div class="progress-bar-bg">
-                                <div class="progress-bar-fill" style="width: 65%; background: var(--accent-green)"></div>
-                            </div>
-                        </div>
-                        <div class="progress-item">
-                            <div class="progress-info">
-                                <span>Giày Loafer Da Cừu</span>
-                                <span>₫ 5.4M</span>
-                            </div>
-                            <div class="progress-bar-bg">
-                                <div class="progress-bar-fill" style="width: 45%; background: var(--accent-orange)"></div>
-                            </div>
-                        </div>
-                        <div class="progress-item">
-                            <div class="progress-info">
-                                <span>Vest Comple Cao Cấp</span>
-                                <span>₫ 4.1M</span>
-                            </div>
-                            <div class="progress-bar-bg">
-                                <div class="progress-bar-fill" style="width: 35%; background: var(--accent-red)"></div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -182,26 +162,35 @@
                     <table class="ecom-orders-table">
                         <thead><tr><th>From</th><th>Price</th><th>Status</th></tr></thead>
                         <tbody>
+                            @foreach($recentOrders as $order)
                             <tr>
-                                <td class="order-customer"><img src="https://ui-avatars.com/api/?name=Maxima+Smalls&size=32&background=F04438&color=fff" class="order-avatar" alt=""><div><div class="order-name">Maxima Smalls</div><div class="order-time">4 minutes ago</div></div></td>
-                                <td class="order-price">$35.22</td><td><span class="order-status status-progress">⬤ In progress</span></td>
+                                <td class="order-customer">
+                                    @php
+                                        $customerName = $order->customer ? $order->customer->name : 'Khách lẻ';
+                                        $avatarInitial = substr($customerName, 0, 1);
+                                    @endphp
+                                    <img src="https://ui-avatars.com/api/?name={{ urlencode($customerName) }}&size=32&background=random&color=fff" class="order-avatar" alt="">
+                                    <div>
+                                        <div class="order-name">{{ $customerName }}</div>
+                                        <div class="order-time">{{ $order->created_at->diffForHumans() }}</div>
+                                    </div>
+                                </td>
+                                <td class="order-price">{{ number_format($order->total_amount) }}đ</td>
+                                <td>
+                                    @if($order->status == 'Pending')
+                                        <span class="order-status" style="color: #d97706;">⬤ Chờ xử lý</span>
+                                    @elseif($order->status == 'Processing')
+                                        <span class="order-status" style="color: #2563eb;">⬤ Đang chuẩn bị</span>
+                                    @elseif($order->status == 'Shipped')
+                                        <span class="order-status" style="color: #c026d3;">⬤ Đang giao</span>
+                                    @elseif($order->status == 'Delivered')
+                                        <span class="order-status" style="color: #10B981;">⬤ Đã giao</span>
+                                    @elseif($order->status == 'Cancelled')
+                                        <span class="order-status" style="color: #ef4444;">⬤ Đã hủy</span>
+                                    @endif
+                                </td>
                             </tr>
-                            <tr>
-                                <td class="order-customer"><img src="https://ui-avatars.com/api/?name=Andrew+Robocop&size=32&background=F0950C&color=fff" class="order-avatar" alt=""><div><div class="order-name">Andrew Robocop</div><div class="order-time">12 minutes ago</div></div></td>
-                                <td class="order-price">$23.75</td><td><span class="order-status status-progress">⬤ In progress</span></td>
-                            </tr>
-                            <tr>
-                                <td class="order-customer"><img src="https://ui-avatars.com/api/?name=Miru+Xander&size=32&background=319DFF&color=fff" class="order-avatar" alt=""><div><div class="order-name">Miru Xander</div><div class="order-time">1 day ago</div></div></td>
-                                <td class="order-price">$18.76</td><td><span class="order-status status-onway">⬤ On the way</span></td>
-                            </tr>
-                            <tr>
-                                <td class="order-customer"><img src="https://ui-avatars.com/api/?name=Lau+Baker&size=32&background=10B981&color=fff" class="order-avatar" alt=""><div><div class="order-name">Lau Baker</div><div class="order-time">1 day ago</div></div></td>
-                                <td class="order-price">$32.00</td><td><span class="order-status status-delivered">⬤ Delivered</span></td>
-                            </tr>
-                            <tr>
-                                <td class="order-customer"><img src="https://ui-avatars.com/api/?name=Ragnar+Walls&size=32&background=8B5CF6&color=fff" class="order-avatar" alt=""><div><div class="order-name">Ragnar Walls</div><div class="order-time">1 day ago</div></div></td>
-                                <td class="order-price">$55.40</td><td><span class="order-status status-cancelled">⬤ Cancelled</span></td>
-                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -257,20 +246,13 @@
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7', 'CN'],
+                labels: {!! json_encode($chartLabels) !!},
                 datasets: [{
                     label: 'Doanh thu',
-                    data: [12, 19, 15, 25, 22, 30, 28],
+                    data: {!! json_encode($chartData) !!},
                     borderColor: '#3C50E0',
                     backgroundColor: 'rgba(60, 80, 224, 0.1)',
                     fill: true,
-                    tension: 0.4
-                }, {
-                    label: 'Chi phí',
-                    data: [8, 12, 10, 15, 18, 20, 15],
-                    borderColor: '#80CAEE',
-                    backgroundColor: 'transparent',
-                    borderDash: [5, 5],
                     tension: 0.4
                 }]
             },

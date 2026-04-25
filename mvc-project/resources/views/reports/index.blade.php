@@ -73,18 +73,22 @@
                     <h2 class="panel-title">Top sản phẩm bán chạy</h2>
                 </div>
                 <div class="progress-list">
-                    <div class="progress-item">
-                        <div class="progress-info"><span>Áo Sơ Mi Oxford</span><span>85%</span></div>
-                        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 85%"></div></div>
-                    </div>
-                    <div class="progress-item">
-                        <div class="progress-info"><span>Quần Tây Slim Fit</span><span>62%</span></div>
-                        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 62%; background: #10B981;"></div></div>
-                    </div>
-                    <div class="progress-item">
-                        <div class="progress-info"><span>Giày Loafer</span><span>45%</span></div>
-                        <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 45%; background: #F0950C;"></div></div>
-                    </div>
+                    @foreach($topSelling as $item)
+                        <div class="progress-item">
+                            <div class="progress-info">
+                                <span>{{ $item->product ? $item->product->name : 'Sản phẩm đã xóa' }}</span>
+                                <span>{{ number_format($item->total_sales) }}đ</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                @php
+                                    $percentage = min(100, max(5, ($item->total_quantity / 100) * 100));
+                                    $colors = ['#319DFF', '#10B981', '#F0950C', '#ef4444', '#8B5CF6'];
+                                    $color = $colors[$loop->index % 5];
+                                @endphp
+                                <div class="progress-bar-fill" style="width: {{ $percentage }}%; background: {{ $color }}"></div>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -100,10 +104,10 @@
         new Chart(revCtx, {
             type: 'line',
             data: {
-                labels: ['Ngày 1', 'Ngày 5', 'Ngày 10', 'Ngày 15', 'Ngày 20', 'Ngày 25', 'Ngày 30'],
+                labels: {!! json_encode($chartLabels) !!},
                 datasets: [{
                     label: 'Doanh thu (VNĐ)',
-                    data: [1500000, 2800000, 2100000, 3500000, 4200000, 3800000, 5000000],
+                    data: {!! json_encode($chartData) !!},
                     borderColor: '#319DFF',
                     backgroundColor: 'rgba(49, 157, 255, 0.1)',
                     fill: true,
@@ -126,10 +130,10 @@
         new Chart(payCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Tiền mặt', 'Chuyển khoản', 'Ví điện tử'],
+                labels: {!! json_encode($pmLabels) !!},
                 datasets: [{
-                    data: [60, 30, 10],
-                    backgroundColor: ['#319DFF', '#10B981', '#F0950C'],
+                    data: {!! json_encode($pmData) !!},
+                    backgroundColor: ['#319DFF', '#10B981', '#F0950C', '#ef4444'],
                     borderWidth: 0
                 }]
             },

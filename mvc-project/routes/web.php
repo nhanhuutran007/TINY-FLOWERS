@@ -11,8 +11,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\OrderController;
-
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/', function () {
     $products = \App\Models\Product::with('category')->where('status', 1)->latest()->take(8)->get();
@@ -20,30 +21,33 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
+Route::get('/shop/{id}', [ShopController::class, 'show'])->name('shop.show');
 Route::get('/collections', [ShopController::class, 'collections'])->name('collections');
 
+Route::middleware(['auth'])->group(function () {
+    Route::post('/products/{product}/reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+});
+
+// CART ROUTES
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+
+// CHECKOUT ROUTES (Requires Auth)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process');
+    Route::get('/checkout/success/{order}', [CheckoutController::class, 'success'])->name('checkout.success');
+});
+
 // LOGIN ROUTES
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
-
-Route::post('/login', function () {
-    $email = request('email');
-    $password = request('password');
-
-    if (($email === 'admin' || $email === 'admin@admin.com') && $password === 'admin') {
-        Session::put('authenticated', true);
-        Session::put('user', ['name' => 'Admin User', 'email' => 'admin@admin.com']);
-        return redirect()->route('dashboard');
-    }
-
-    return back()->withErrors(['email' => 'Tài khoản hoặc mật khẩu không đúng (admin/admin)']);
-})->name('login.post');
+Route::get('/login', [App\Http\Controllers\AuthController::class, 'login'])->name('login');
+Route::post('/login', [App\Http\Controllers\AuthController::class, 'postLogin'])->name('login.post');
 
 // REGISTER & FORGOT PASSWORD
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
+Route::get('/register', [App\Http\Controllers\AuthController::class, 'register'])->name('register');
+Route::post('/register', [App\Http\Controllers\AuthController::class, 'postRegister'])->name('register.post');
 
 Route::get('/forgot-password', function () {
     return view('auth.forgot-password');
@@ -65,19 +69,14 @@ Route::get('/reset-password', function () {
     return "Trang đặt lại mật khẩu (Sẽ được triển khai ở bước sau)";
 })->name('password.reset.view');
 
-// DASHBOARD & PROTECTED ROUTES
-Route::get('/dashboard', function() {
-    if (!Session::get('authenticated')) {
-        return redirect()->route('login');
-    }
-    return view('dashboard');
-})->name('dashboard');
+// Favorites
+Route::post('/favorites/{product}', [\App\Http\Controllers\FavoriteController::class, 'toggle'])->name('favorites.toggle')->middleware('auth');
+Route::get('/profile/favorites', [\App\Http\Controllers\FavoriteController::class, 'index'])->name('profile.favorites')->middleware('auth');
 
-Route::get('/logout', function() {
-    Session::forget('authenticated');
-    Session::forget('user');
-    return redirect()->route('login');
-})->name('logout');
+// DASHBOARD & PROTECTED ROUTES
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+
+Route::get('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
 
 // Các route quản lý khác (Tạm thời bỏ middleware để bạn dễ test giao diện)
 Route::resource('categories', CategoryController::class);
@@ -91,5 +90,8 @@ Route::get('/profile', [UserController::class, 'profile'])->name('profile.index'
 Route::post('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
 Route::get('/change-password', [UserController::class, 'changePasswordView'])->name('profile.password');
 Route::post('/change-password', [UserController::class, 'updatePassword'])->name('profile.password.update');
+Route::get('/address', [UserController::class, 'addressView'])->name('profile.address');
+Route::post('/address', [UserController::class, 'updateAddress'])->name('profile.address.update');
+Route::get('/profile/orders', [UserController::class, 'ordersView'])->name('profile.orders');
 
 Route::get('/api/stock-alerts', [\App\Http\Controllers\StockAlertController::class, 'index']);

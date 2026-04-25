@@ -29,6 +29,12 @@
     <!-- Sign In Container -->
     <div class="auth-container">
         <h1>Đăng nhập</h1>
+        @if (session('success'))
+            <div class="success-message" style="background: rgba(46, 204, 113, 0.1); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.2); padding: 12px 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 10px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
         
         @if ($errors->any())
             <div class="error-message">
