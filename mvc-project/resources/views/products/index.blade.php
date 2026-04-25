@@ -110,6 +110,15 @@
                 @csrf
                 <div id="productMethodField"></div>
                 <div class="modal-body-custom">
+                    @if ($errors->any())
+                        <div style="background: #fef2f2; border: 1px solid #ef4444; color: #b91c1c; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; font-size: 13px;">
+                            <ul style="margin: 0; padding-left: 20px;">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                         <div class="form-group">
                             <label>Mã vạch <span style="color: red;">*</span></label>
@@ -123,7 +132,7 @@
                             <label>Danh mục <span style="color: red;">*</span></label>
                             <select name="category_id" id="pCategory" required style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;">
                                 <option value="">-- Chọn danh mục --</option>
-                                @foreach($categories as $category)
+                                @foreach($categories->whereNotNull('parent_id') as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
                             </select>
@@ -221,5 +230,9 @@
 
         function closeProductModal() { pModal.style.display = 'none'; }
         window.onclick = function(event) { if (event.target == pModal) closeProductModal(); }
+
+        @if ($errors->any())
+            openAddProductModal();
+        @endif
     </script>
 @endsection

@@ -32,6 +32,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Tên danh mục</th>
+                        <th>Danh mục cha</th>
                         <th>Mô tả</th>
                         <th>Ngày tạo</th>
                         <th style="text-align: right;">Thao tác</th>
@@ -42,6 +43,13 @@
                         <tr>
                             <td>#{{ $category->id }}</td>
                             <td style="font-weight: 600; color: #319DFF;">{{ $category->name }}</td>
+                            <td>
+                                @if($category->parent)
+                                    <span style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 12px; color: #475569;">{{ $category->parent->name }}</span>
+                                @else
+                                    <span style="color: #94a3b8; font-size: 12px; font-style: italic;">Không có</span>
+                                @endif
+                            </td>
                             <td>{{ $category->description ?: 'Không có mô tả' }}</td>
                             <td>{{ $category->created_at->format('d/m/Y H:i') }}</td>
                             <td style="text-align: right;">
@@ -59,7 +67,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" style="text-align: center; padding: 40px; color: #94a3b8;">
+                            <td colspan="6" style="text-align: center; padding: 40px; color: #94a3b8;">
                                 <i class="fas fa-folder-open" style="font-size: 40px; display: block; margin-bottom: 10px; opacity: 0.5;"></i>
                                 Chưa có danh mục nào được tạo.
                             </td>
@@ -84,6 +92,15 @@
                     <div class="form-group">
                         <label>Tên danh mục <span style="color: red;">*</span></label>
                         <input type="text" name="name" id="catName" required placeholder="Nhập tên danh mục...">
+                    </div>
+                    <div class="form-group">
+                        <label>Danh mục cha</label>
+                        <select name="parent_id" id="catParent" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                            <option value="">-- Không có --</option>
+                            @foreach($parentCategories as $parent)
+                                <option value="{{ $parent->id }}">{{ $parent->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Mô tả</label>
@@ -204,6 +221,7 @@
         const modalTitle = document.getElementById('modalTitle');
         const methodField = document.getElementById('methodField');
         const catName = document.getElementById('catName');
+        const catParent = document.getElementById('catParent');
         const catDesc = document.getElementById('catDesc');
 
         function openAddModal() {
@@ -211,6 +229,7 @@
             form.action = "{{ route('categories.store') }}";
             methodField.innerHTML = '';
             catName.value = '';
+            catParent.value = '';
             catDesc.value = '';
             modal.style.display = 'block';
         }
@@ -220,6 +239,7 @@
             form.action = `/categories/${category.id}`;
             methodField.innerHTML = '@method("PUT")';
             catName.value = category.name;
+            catParent.value = category.parent_id || '';
             catDesc.value = category.description || '';
             modal.style.display = 'block';
         }

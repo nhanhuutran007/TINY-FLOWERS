@@ -45,7 +45,10 @@
                         <tr>
                             <td style="font-weight: 600; color: #319DFF;">{{ $order->order_number }}</td>
                             <td>
-                                @if($order->customer)
+                                @if($order->user)
+                                    <div style="font-weight: 600;">{{ $order->user->fullname }}</div>
+                                    <div style="font-size: 12px; color: #64748b;">{{ $order->user->email }}</div>
+                                @elseif($order->customer)
                                     <div style="font-weight: 600;">{{ $order->customer->name }}</div>
                                     <div style="font-size: 12px; color: #64748b;">{{ $order->customer->phone }}</div>
                                 @else
@@ -60,10 +63,18 @@
                                 </span>
                             </td>
                             <td>
-                                @if($order->status === 'completed')
-                                    <span style="color: #10B981; font-size: 12px; font-weight: 600;"><i class="fas fa-check-circle"></i> Hoàn thành</span>
+                                @if($order->status === 'Pending')
+                                    <span style="color: #d97706; background: #fffbeb; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;"><i class="fas fa-clock"></i> Chờ xử lý</span>
+                                @elseif($order->status === 'Processing')
+                                    <span style="color: #2563eb; background: #eff6ff; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;"><i class="fas fa-cog fa-spin"></i> Chuẩn bị</span>
+                                @elseif($order->status === 'Shipped')
+                                    <span style="color: #c026d3; background: #fdf4ff; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;"><i class="fas fa-truck"></i> Đang giao</span>
+                                @elseif($order->status === 'Delivered')
+                                    <span style="color: #10B981; background: #ecfdf5; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;"><i class="fas fa-check-circle"></i> Đã giao</span>
+                                @elseif($order->status === 'Cancelled')
+                                    <span style="color: #ef4444; background: #fef2f2; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;"><i class="fas fa-times-circle"></i> Đã hủy</span>
                                 @else
-                                    <span style="color: #F0950C; font-size: 12px; font-weight: 600;"><i class="fas fa-clock"></i> {{ $order->status }}</span>
+                                    <span style="color: #10B981; font-size: 12px; font-weight: 600;"><i class="fas fa-check-circle"></i> Hoàn thành</span>
                                 @endif
                             </td>
                             <td style="text-align: right;">

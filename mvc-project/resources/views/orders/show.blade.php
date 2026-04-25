@@ -20,9 +20,18 @@
             <div class="panel">
                 <div class="panel-header">
                     <h2 class="panel-title">Thông tin chung</h2>
-                    <span style="background: #e0f2fe; color: #0ea5e9; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 600;">
-                        {{ strtoupper($order->status) }}
-                    </span>
+                    <form action="{{ route('orders.update', $order->id) }}" method="POST" style="display: flex; gap: 10px; align-items: center;">
+                        @csrf
+                        @method('PUT')
+                        <select name="status" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #e2e8f0; font-weight: 600; outline: none; background: #f8fafc; color: #334155;">
+                            <option value="Pending" {{ $order->status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                            <option value="Processing" {{ $order->status == 'Processing' ? 'selected' : '' }}>Processing</option>
+                            <option value="Shipped" {{ $order->status == 'Shipped' ? 'selected' : '' }}>Shipped</option>
+                            <option value="Delivered" {{ $order->status == 'Delivered' ? 'selected' : '' }}>Delivered</option>
+                            <option value="Cancelled" {{ $order->status == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+                        </select>
+                        <button type="submit" style="background: #0ea5e9; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.2s;">Cập nhật</button>
+                    </form>
                 </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
@@ -39,8 +48,8 @@
                         <div style="font-weight: 600; color: #1e293b;">{{ ucfirst($order->payment_method) }}</div>
                     </div>
                     <div>
-                        <div style="color: #64748b; font-size: 12px; margin-bottom: 5px;">NHÂN VIÊN LẬP</div>
-                        <div style="font-weight: 600; color: #1e293b;">{{ $order->user->fullname ?? 'Hệ thống' }}</div>
+                        <div style="color: #64748b; font-size: 12px; margin-bottom: 5px;">NGƯỜI ĐẶT (TÀI KHOẢN)</div>
+                        <div style="font-weight: 600; color: #1e293b;">{{ $order->user->fullname ?? 'Khách không có tài khoản' }}</div>
                     </div>
                 </div>
             </div>
@@ -50,7 +59,23 @@
                 <div class="panel-header">
                     <h2 class="panel-title">Khách hàng</h2>
                 </div>
-                @if($order->customer)
+                @if($order->user)
+                    <div style="display: flex; align-items: center; margin-top: 20px;">
+                        @php
+                            $avatarUrl = $order->user->profile_picture 
+                                ? asset('images/avatars/' . $order->user->profile_picture) 
+                                : 'https://ui-avatars.com/api/?name=' . urlencode($order->user->fullname) . '&background=319DFF&color=fff';
+                        @endphp
+                        <img src="{{ $avatarUrl }}" alt="{{ $order->user->fullname }}" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; margin-right: 15px;">
+                        <div>
+                            <div style="font-weight: 700; color: #1e293b; font-size: 16px;">{{ $order->user->fullname }}</div>
+                            <div style="color: #64748b; font-size: 13px;">{{ $order->user->email }} | {{ $order->user->phone ?? 'Không có SĐT' }}</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; color: #475569; font-size: 14px;">
+                        <i class="fas fa-map-marker-alt" style="margin-right: 10px; color: #94a3b8;"></i> {{ $order->user->address ?: 'Không có địa chỉ' }}
+                    </div>
+                @elseif($order->customer)
                     <div style="display: flex; align-items: center; margin-top: 20px;">
                         <div style="width: 48px; height: 48px; background: #319DFF; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; margin-right: 15px;">
                             {{ substr($order->customer->name, 0, 1) }}

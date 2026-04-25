@@ -17,6 +17,7 @@ class ShopController extends Controller
         $query = Product::with('category')->where('status', 1);
 
         if ($request->has('category') && $request->category != '') {
+        if ($request->has('category') && $request->category != '') {
             $categoryName = $request->category;
             $query->whereHas('category', function($q) use ($categoryName) {
                 $q->where('name', 'like', '%' . $categoryName . '%');

@@ -19,6 +19,18 @@ class OrderController extends Controller
         return view('orders.show', compact('order'));
     }
 
+    public function update(Request $request, Order $order)
+    {
+        $request->validate([
+            'status' => 'required|in:Pending,Processing,Shipped,Delivered,Cancelled'
+        ]);
+
+        $order->status = $request->status;
+        $order->save();
+
+        return redirect()->route('orders.show', $order)->with('success', 'Cập nhật trạng thái đơn hàng thành công!');
+    }
+
     public function destroy(Order $order)
     {
         $order->delete();
