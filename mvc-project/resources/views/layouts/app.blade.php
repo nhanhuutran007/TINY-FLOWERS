@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - TINY FLOWERS</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/favicon.svg') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
@@ -23,10 +23,7 @@
     <!-- Sidebar -->
     <aside class="menu-left-side" aria-label="Primary sidebar navigation">
         <div class="logo">
-            <div class="logo-icon-wrap">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo"
-                    style="width: 32px; height: 32px; object-fit: contain;">
-            </div>
+            <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #FF7EB3, #7AF5FF); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; color: white; font-size: 14px; margin-right: 10px; flex-shrink: 0; box-shadow: 0 2px 5px rgba(255,126,179,0.3);">TF</div>
             <span class="logo-text">TINY FLOWERS</span>
         </div>
 

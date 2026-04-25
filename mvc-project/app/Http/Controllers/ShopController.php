@@ -12,15 +12,29 @@ class ShopController extends Controller
     {
         $query = Product::with('category')->where('status', 1);
 
-        if ($request->has('category')) {
+        if ($request->has('category') && $request->category != '') {
             $categoryName = $request->category;
             $query->whereHas('category', function($q) use ($categoryName) {
                 $q->where('name', 'like', '%' . $categoryName . '%');
             });
         }
 
+        if ($request->has('search') && $request->search != '') {
+            $searchTerm = $request->search;
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('barcode', 'like', '%' . $searchTerm . '%');
+            });
+        }
+
         $products = $query->latest()->paginate(15);
-        $title = $request->category ?? 'Tất cả sản phẩm';
+        
+        $title = 'Tất cả sản phẩm';
+        if ($request->has('category') && $request->category != '') {
+            $title = $request->category;
+        } elseif ($request->has('search') && $request->search != '') {
+            $title = 'Kết quả tìm kiếm: ' . $request->search;
+        }
 
         return view('shop.index', compact('products', 'title'));
     }

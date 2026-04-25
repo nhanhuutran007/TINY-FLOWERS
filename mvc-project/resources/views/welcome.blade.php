@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tiny Flowers - Fashion & Streetwear</title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/favicon.svg') }}">
     <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +15,7 @@
     <header class="main-header">
         <div class="header-container">
             <a href="{{ route('home') }}" class="logo-area">
-                <img src="{{ asset('images/logo.png') }}" alt="Tiny Flowers" style="width: 40px; height: 40px; object-fit: contain; margin-right: 10px;">
+                <div class="logo-circle" style="margin-right: 10px;">TF</div>
                 <span class="brand-name">Tiny Flowers</span>
             </a>
 
@@ -27,10 +28,10 @@
             </nav>
 
             <div class="header-actions">
-                <div class="search-bar">
-                    <i class="fas fa-search search-icon"></i>
-                    <input type="text" placeholder="Tìm sản phẩm..." class="search-input">
-                </div>
+                <form action="{{ route('shop') }}" method="GET" class="search-bar">
+                    <button type="submit" style="background: none; border: none; cursor: pointer; display: flex; align-items: center;"><i class="fas fa-search search-icon"></i></button>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm sản phẩm..." class="search-input">
+                </form>
                 <div class="auth-group">
                     <a href="{{ route('login') }}" class="auth-link">
                         <i class="far fa-user"></i>
@@ -92,14 +93,16 @@
                     <div class="product-card">
                         <div class="product-image">
                             <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
-                            <button class="add-cart-btn">
-                                <i class="fas fa-plus"></i>
-                            </button>
                         </div>
                         <div class="product-details">
                             <p class="product-category">{{ $product->category->name ?? 'FASHION' }}</p>
                             <h3 class="product-name">{{ $product->name }}</h3>
-                            <p class="product-price">{{ number_format($product->selling_price) }}đ</p>
+                            <div class="price-cart-row">
+                                <p class="product-price">{{ number_format($product->selling_price) }}đ</p>
+                                <button class="add-to-cart-box" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->selling_price }}" data-image="{{ $product->image_url }}">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 @empty
@@ -107,12 +110,16 @@
                     <div class="product-card">
                         <div class="product-image">
                             <img src="{{ asset('images/welcome/tshirt.png') }}" alt="Sample Product">
-                            <button class="add-cart-btn"><i class="fas fa-plus"></i></button>
                         </div>
                         <div class="product-details">
                             <p class="product-category">T-SHIRT</p>
                             <h3 class="product-name">Áo Boxy Heavyweight Cream</h3>
-                            <p class="product-price">350,000đ</p>
+                            <div class="price-cart-row">
+                                <p class="product-price">350,000đ</p>
+                                <button class="add-to-cart-box" data-id="sample" data-name="Áo Boxy Heavyweight Cream" data-price="350000" data-image="{{ asset('images/welcome/tshirt.png') }}">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 @endforelse
@@ -256,5 +263,136 @@
             <p>Made with <i class="fas fa-heart" style="color: #ef4444;"></i> in Vietnam</p>
         </div>
     </footer>
+
+    <!-- Cart Sidebar Overlay -->
+    <div class="cart-overlay"></div>
+    
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar">
+        <div class="cart-sidebar-header">
+            <h2>GIỎ HÀNG</h2>
+            <button class="close-cart-btn"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="cart-items-container">
+            <!-- Items will be injected here -->
+        </div>
+        <div class="cart-sidebar-footer">
+            <div class="cart-total-row">
+                <span>TỔNG TIỀN:</span>
+                <span class="cart-total-amount">0đ</span>
+            </div>
+            <button class="checkout-btn">THANH TOÁN</button>
+        </div>
+    </div>
+
+    <script>
+        // Cart logic
+        let cart = JSON.parse(localStorage.getItem('tiny_flowers_cart')) || [];
+
+        function updateCartUI() {
+            const badge = document.querySelector('.badge-count');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            if(badge) badge.textContent = totalItems;
+
+            const cartContainer = document.querySelector('.cart-items-container');
+            const totalAmount = document.querySelector('.cart-total-amount');
+            
+            if(cartContainer) {
+                cartContainer.innerHTML = '';
+                let total = 0;
+
+                if (cart.length === 0) {
+                    cartContainer.innerHTML = '<p style="text-align:center; color:#94a3b8; margin-top:20px;">Giỏ hàng trống</p>';
+                } else {
+                    cart.forEach((item, index) => {
+                        total += item.price * item.quantity;
+                        cartContainer.innerHTML += `
+                            <div class="cart-item">
+                                <img src="${item.image}" class="cart-item-img" alt="${item.name}">
+                                <div class="cart-item-info">
+                                    <div class="cart-item-name">${item.name}</div>
+                                    <div class="cart-item-price">${new Intl.NumberFormat('vi-VN').format(item.price)}đ</div>
+                                    <div class="cart-item-actions">
+                                        <div class="qty-wrapper">
+                                            <button class="qty-btn" onclick="updateQty(${index}, -1)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+                                            <span class="qty-display">${item.quantity}</span>
+                                            <button class="qty-btn" onclick="updateQty(${index}, 1)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+                                        </div>
+                                        <button class="remove-item-btn" onclick="removeItem(${index})"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                if(totalAmount) totalAmount.textContent = new Intl.NumberFormat('vi-VN').format(total) + 'đ';
+            }
+            localStorage.setItem('tiny_flowers_cart', JSON.stringify(cart));
+        }
+
+        function addToCart(id, name, price, image) {
+            const existing = cart.find(item => item.id == id);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ id, name, price, image, quantity: 1 });
+            }
+            updateCartUI();
+            const sidebar = document.querySelector('.cart-sidebar');
+            const overlay = document.querySelector('.cart-overlay');
+            if(sidebar) sidebar.classList.add('active');
+            if(overlay) overlay.classList.add('active');
+        }
+
+        window.updateQty = function(index, change) {
+            cart[index].quantity += change;
+            if (cart[index].quantity <= 0) {
+                cart.splice(index, 1);
+            }
+            updateCartUI();
+        };
+
+        window.removeItem = function(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartUI();
+
+            document.querySelectorAll('.add-to-cart-box').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const id = btn.getAttribute('data-id');
+                    const name = btn.getAttribute('data-name');
+                    const price = parseInt(btn.getAttribute('data-price'));
+                    const image = btn.getAttribute('data-image');
+                    addToCart(id, name, price, image);
+                });
+            });
+
+            const cartBtn = document.querySelector('.cart-btn');
+            const sidebar = document.querySelector('.cart-sidebar');
+            const overlay = document.querySelector('.cart-overlay');
+            const closeBtn = document.querySelector('.close-cart-btn');
+
+            if(cartBtn) {
+                cartBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if(sidebar) sidebar.classList.add('active');
+                    if(overlay) overlay.classList.add('active');
+                });
+            }
+
+            const closeCart = () => {
+                if(sidebar) sidebar.classList.remove('active');
+                if(overlay) overlay.classList.remove('active');
+            };
+
+            if(closeBtn) closeBtn.addEventListener('click', closeCart);
+            if(overlay) overlay.addEventListener('click', closeCart);
+        });
+    </script>
 </body>
 </html>
