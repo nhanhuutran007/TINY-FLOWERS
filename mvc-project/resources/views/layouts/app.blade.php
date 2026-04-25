@@ -77,6 +77,16 @@
                 </a>
             </div>
 
+            @if(Auth::user()->role !== 'admin')
+            <div class="menu-item-wrap">
+                <a href="{{ route('profile.orders') }}"
+                    class="{{ request()->routeIs('profile.orders') ? 'menu-btn-active' : 'menu-btn' }}" id="nav-my-orders">
+                    <span class="nav-icon"><i class="fas fa-history"></i></span>
+                    <span class="nav-label">Lịch sử đơn hàng</span>
+                </a>
+            </div>
+            @endif
+
             <div class="menu-item-wrap">
                 <a href="{{ route('logout') }}" class="menu-btn" id="nav-logout">
                     <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span>
@@ -166,6 +176,9 @@
                         </div>
                         <hr>
                         <a href="{{ route('profile.index') }}"><i class="fas fa-user-circle"></i> Hồ sơ của tôi</a>
+                        @if(Auth::user()->role !== 'admin')
+                        <a href="{{ route('profile.orders') }}"><i class="fas fa-history"></i> Lịch sử đơn hàng</a>
+                        @endif
                         <a href="{{ route('profile.password') }}"><i class="fas fa-key"></i> Đổi mật khẩu</a>
                         <hr>
                         <a href="{{ route('logout') }}" class="logout-link"><i class="fas fa-sign-out-alt"></i> Đăng

@@ -43,10 +43,10 @@
         <form method="POST" action="{{ route('login') }}">
             @csrf
             
-            <!-- Email Input -->
+            <!-- Email/Username Input -->
             <div class="auth-form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="email@address.com" required autofocus>
+                <label for="login">Email hoặc Tên đăng nhập</label>
+                <input type="text" id="login" name="login" value="{{ old('login') }}" placeholder="Nhập email hoặc tên đăng nhập" required autofocus>
             </div>
             
             <!-- Password Input -->

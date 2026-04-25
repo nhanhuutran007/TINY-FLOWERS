@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class ShopController extends Controller
 {
@@ -16,7 +17,6 @@ class ShopController extends Controller
     {
         $query = Product::with('category')->where('status', 1);
 
-        if ($request->has('category') && $request->category != '') {
         if ($request->has('category') && $request->category != '') {
             $categoryName = $request->category;
             $query->whereHas('category', function($q) use ($categoryName) {
@@ -48,9 +48,11 @@ class ShopController extends Controller
     {
         $products = Product::where('status', 1)
                           ->where(function($q) {
-                              $q->where('category_id', 'like', '%Set%')
-                                ->orWhere('name', 'like', '%Set%')
-                                ->orWhere('name', 'like', '%Combo%');
+                              $q->whereHas('category', function($query) {
+                                  $query->where('name', 'like', '%Set%');
+                              })
+                              ->orWhere('name', 'like', '%Set%')
+                              ->orWhere('name', 'like', '%Combo%');
                           })
                           ->latest()->paginate(12);
         
@@ -68,6 +70,7 @@ class ShopController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
             'phone' => 'required|string|max:20',
             'address' => 'required|string',
             'payment_method' => 'required|string',
@@ -80,10 +83,20 @@ class ShopController extends Controller
             return back()->with('error', 'Giỏ hàng của bạn đang trống.');
         }
 
+        // Combine address components if provided
+        $address = $request->address;
+        if ($request->filled('city')) $address .= ', ' . $request->city;
+        if ($request->filled('zip')) $address .= ' ' . $request->zip;
+        if ($request->filled('country')) $address .= ', ' . $request->country;
+
         // Process customer
-        $customer = Customer::firstOrCreate(
+        $customer = Customer::updateOrCreate(
             ['phone' => $request->phone],
-            ['name' => $request->name, 'address' => $request->address]
+            [
+                'name' => $request->name, 
+                'email' => $request->email,
+                'address' => $address
+            ]
         );
 
         $subtotal = 0;
@@ -98,46 +111,55 @@ class ShopController extends Controller
         
         $totalAmount = $subtotal + $shippingFee;
 
-        $orderNumber = 'ORD-' . strtoupper(Str::random(6));
-        
-        $order = new Order();
-        $order->order_number = $orderNumber;
-        $order->customer_id = $customer->id;
-        $order->user_id = null;
-        $order->subtotal = $subtotal;
-        $order->shipping_fee = $shippingFee;
-        $order->total_amount = $totalAmount;
-        $order->amount_paid = 0;
-        $order->change_amount = 0;
-        $order->payment_method = $request->payment_method;
-        $order->payment_status = 'pending';
-        $order->shipping_address = $request->address;
-        $order->notes = $request->notes;
-        $order->status = 'pending';
-        $order->save();
+        DB::beginTransaction();
+        try {
+            $orderNumber = 'ORD-' . strtoupper(Str::random(6));
+            
+            $order = new Order();
+            $order->order_number = $orderNumber;
+            $order->customer_id = $customer->id;
+            $order->user_id = auth()->id();
+            $order->subtotal = $subtotal;
+            $order->discount = 0;
+            $order->shipping_fee = $shippingFee;
+            $order->total_amount = $totalAmount;
+            $order->amount_paid = 0;
+            $order->change_amount = 0;
+            $order->payment_method = $request->payment_method;
+            $order->payment_status = 'pending';
+            $order->shipping_address = $address;
+            $order->notes = $request->notes;
+            $order->status = 'pending';
+            $order->save();
 
-        foreach ($cartData as $item) {
-            $product = Product::find($item['id']);
-            if ($product) {
-                $orderItem = new OrderItem();
-                $orderItem->order_id = $order->id;
-                $orderItem->product_id = $product->id;
-                $orderItem->product_name = $product->name;
-                $orderItem->cost_price = $product->cost_price;
-                $orderItem->selling_price = $item['price'];
-                $orderItem->quantity = $item['quantity'];
-                $orderItem->subtotal = $item['price'] * $item['quantity'];
-                $orderItem->save();
-                
-                $product->stock_quantity -= $item['quantity'];
-                $product->save();
+            foreach ($cartData as $item) {
+                $product = Product::find($item['id']);
+                if ($product) {
+                    $orderItem = new OrderItem();
+                    $orderItem->order_id = $order->id;
+                    $orderItem->product_id = $product->id;
+                    $orderItem->product_name = $product->name;
+                    $orderItem->cost_price = $product->cost_price ?? 0;
+                    $orderItem->selling_price = $item['price'];
+                    $orderItem->quantity = $item['quantity'];
+                    $orderItem->subtotal = $item['price'] * $item['quantity'];
+                    $orderItem->save();
+                    
+                    $product->stock_quantity -= $item['quantity'];
+                    $product->save();
+                }
             }
+
+            $customer->total_spent += $totalAmount;
+            $customer->save();
+
+            DB::commit();
+
+            return redirect()->route('checkout.success', $order->order_number);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Có lỗi xảy ra khi xử lý đơn hàng: ' . $e->getMessage());
         }
-
-        $customer->total_spent += $totalAmount;
-        $customer->save();
-
-        return redirect()->route('checkout.success', $order->order_number);
     }
 
     public function checkoutSuccess($orderNumber)

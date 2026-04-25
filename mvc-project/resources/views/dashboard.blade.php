@@ -36,7 +36,7 @@
                             <i class="fas fa-coins"></i>
                         </div>
                     </div>
-                    <div class="stat-value">₫ {{ number_format($totalRevenue) }}</div>
+                    <div class="stat-value">₫ {{ number_format($totalRevenue ?? 0) }}</div>
                     <div class="stat-label">Tổng doanh thu</div>
                     <div class="trend-indicator trend-up">
                         <i class="fas fa-arrow-up"></i> <span>Dựa trên đơn hoàn thành</span>
@@ -48,7 +48,7 @@
                             <i class="fas fa-shopping-cart"></i>
                         </div>
                     </div>
-                    <div class="stat-value">{{ number_format($totalOrders) }}</div>
+                    <div class="stat-value">{{ number_format($totalOrders ?? 0) }}</div>
                     <div class="stat-label">Tổng đơn hàng</div>
                     <div class="trend-indicator trend-up">
                         <i class="fas fa-arrow-up"></i> <span>Tất cả trạng thái</span>
@@ -60,7 +60,7 @@
                             <i class="fas fa-box"></i>
                         </div>
                     </div>
-                    <div class="stat-value">{{ number_format($totalProducts) }}</div>
+                    <div class="stat-value">{{ number_format($totalProducts ?? 0) }}</div>
                     <div class="stat-label">Tổng sản phẩm</div>
                     <div class="trend-indicator trend-up">
                         <i class="fas fa-box-open"></i> <span>Sản phẩm đang bán</span>
@@ -72,7 +72,7 @@
                             <i class="fas fa-users"></i>
                         </div>
                     </div>
-                    <div class="stat-value">{{ number_format($totalCustomers) }}</div>
+                    <div class="stat-value">{{ number_format($totalCustomers ?? 0) }}</div>
                     <div class="stat-label">Khách hàng</div>
                     <div class="trend-indicator trend-up">
                         <i class="fas fa-users"></i> <span>Đã đăng ký</span>

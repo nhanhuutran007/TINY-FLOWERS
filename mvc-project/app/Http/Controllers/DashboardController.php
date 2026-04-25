@@ -8,6 +8,9 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        if (!\Illuminate\Support\Facades\Auth::check() || \Illuminate\Support\Facades\Auth::user()->role !== 'admin') {
+            return redirect()->route('login');
+        }
         $totalRevenue = \App\Models\Order::where('status', 'Delivered')->sum('total_amount');
         $totalOrders = \App\Models\Order::count();
         $totalCustomers = \App\Models\User::where('role', 'customer')->count();

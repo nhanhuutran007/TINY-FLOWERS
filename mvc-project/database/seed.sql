@@ -41,9 +41,9 @@ INSERT INTO `categories` (`id`, `name`, `description`, `created_by`, `created_at
 -- Đang đổ dữ liệu cho bảng `customers`
 --
 
-INSERT INTO `customers` (`id`, `name`, `phone`, `address`, `total_spent`, `created_at`, `updated_at`) VALUES
-(1, 'Nguyễn Văn A', '0912345678', 'Hà Nội', 1300000.00, '2026-04-23 16:09:49', '2026-04-23 16:09:49'),
-(2, 'Trần Thị B', '0987654321', 'TP. HCM', 450000.00, '2026-04-23 16:09:49', '2026-04-23 16:09:49');
+INSERT INTO `customers` (`id`, `name`, `phone`, `email`, `address`, `total_spent`, `created_at`, `updated_at`) VALUES
+(1, 'Nguyễn Văn A', '0912345678', 'nguyenvana@example.com', 'Hà Nội', 1300000.00, '2026-04-23 16:09:49', '2026-04-23 16:09:49'),
+(2, 'Trần Thị B', '0987654321', 'tranthib@example.com', 'TP. HCM', 450000.00, '2026-04-23 16:09:49', '2026-04-23 16:09:49');
 
 --
 -- Đang đổ dữ liệu cho bảng `migrations`
@@ -58,7 +58,14 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (6, '2026_04_20_072430_create_products_table', 1),
 (7, '2026_04_20_072431_create_activity_logs_table', 1),
 (8, '2026_04_23_155828_create_orders_table', 1),
-(9, '2026_04_23_155834_create_order_items_table', 1);
+(9, '2026_04_23_155834_create_order_items_table', 1),
+(10, '2026_04_24_174038_add_phone_and_address_to_users_table', 2),
+(11, '2026_04_24_183404_add_parent_id_to_categories_table', 2),
+(12, '2026_04_24_194149_create_reviews_table', 2),
+(13, '2026_04_24_195659_create_favorites_table', 2),
+(14, '2026_04_25_151200_add_missing_fields_to_orders_table', 3),
+(15, '2026_04_25_151700_add_email_to_customers_table', 4),
+(16, '2026_04_25_171138_make_user_id_nullable_in_orders_table', 5);
 
 --
 -- Đang đổ dữ liệu cho bảng `orders`

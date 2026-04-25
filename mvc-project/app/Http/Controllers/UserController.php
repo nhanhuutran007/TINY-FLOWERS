@@ -54,13 +54,6 @@ class UserController extends Controller
 
         $user->save();
 
-        // Update session
-        Session::put('user', [
-            'name' => $user->fullname,
-            'email' => $user->email,
-            'role' => $user->role
-        ]);
-
         return back()->with('success', 'Cập nhật thông tin thành công!');
     }
 
