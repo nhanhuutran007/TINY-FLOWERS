@@ -5,7 +5,7 @@
 @section('content')
 <div class="page-title-bar">
     <div style="display: flex; align-items: center; gap: 12px;">
-        <a href="{{ route('account.orders') }}" class="btn-icon"><i class="fas fa-arrow-left"></i></a>
+        <a href="{{ route('profile.orders') }}" class="btn-icon"><i class="fas fa-arrow-left"></i></a>
         <h1 class="page-title-text">Chi tiết đơn hàng {{ $order->order_number }}</h1>
     </div>
 </div>

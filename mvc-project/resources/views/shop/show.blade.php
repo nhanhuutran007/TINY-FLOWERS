@@ -583,8 +583,9 @@
 
                 <div class="review-list">
                     @auth
-                        <form action="{{ route('reviews.store', $product->id) }}" method="POST" style="margin-bottom: 40px; background: #f8fafc; padding: 24px; border-radius: 16px;">
+                        <form action="{{ route('reviews.store') }}" method="POST" style="margin-bottom: 40px; background: #f8fafc; padding: 24px; border-radius: 16px;">
                             @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
                             <h4 style="margin-top: 0; margin-bottom: 16px; font-size: 16px; color: #0f172a;">Viết đánh giá của bạn</h4>
                             <div style="margin-bottom: 16px;">
                                 <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 600; color: #334155;">Đánh giá (Sao):</label>

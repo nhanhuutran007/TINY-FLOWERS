@@ -31,10 +31,10 @@ class AccountController extends Controller
 
         $order = Order::where('order_number', $orderNumber)
             ->where('user_id', Auth::id())
-            ->with('items.product')
+            ->with(['items.product', 'customer'])
             ->firstOrFail();
 
-        return view('account.order_details', compact('order'));
+        return view('profile.order-details', compact('order'));
     }
 
     public function storeReview(Request $request)

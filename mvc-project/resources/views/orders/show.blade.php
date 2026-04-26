@@ -146,7 +146,9 @@
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <span style="color: #166534; font-weight: 700; font-size: 14px;">ĐÃ THANH TOÁN:</span>
-                    <span style="color: #166534; font-weight: 800; font-size: 20px; margin-left: 10px;">{{ number_format($order->amount_paid) }}đ</span>
+                    <span style="color: #166534; font-weight: 800; font-size: 20px; margin-left: 10px;">
+                        {{ (strtolower($order->status) == 'delivered' || $order->payment_status == 'paid') ? number_format($order->total_amount) : number_format($order->amount_paid) }}đ
+                    </span>
                 </div>
                 <div>
                     <span style="color: #166534; font-weight: 700; font-size: 14px;">TIỀN THỪA:</span>
