@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Review;
+use App\Models\Favorite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -56,5 +57,39 @@ class AccountController extends Controller
         ]);
 
         return back()->with('success', 'Cảm ơn bạn đã đánh giá sản phẩm!');
+    }
+
+    public function toggleFavorite(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json(['success' => false, 'message' => 'Vui lòng đăng nhập để thực hiện.'], 401);
+        }
+
+        $productId = $request->input('product_id');
+        $user = Auth::user();
+
+        try {
+            $deleted = Favorite::where('user_id', $user->user_id)
+                ->where('product_id', $productId)
+                ->delete();
+
+            if ($deleted) {
+                return response()->json(['success' => true, 'action' => 'removed']);
+            }
+
+            Favorite::create([
+                'user_id' => $user->user_id,
+                'product_id' => $productId
+            ]);
+
+            return response()->json(['success' => true, 'action' => 'added']);
+        } catch (\Illuminate\Database\UniqueConstraintViolationException $e) {
+            return response()->json(['success' => true, 'action' => 'added']);
+        } catch (\Illuminate\Database\QueryException $e) {
+            if ($e->errorInfo[1] == 1062) {
+                return response()->json(['success' => true, 'action' => 'added']);
+            }
+            throw $e;
+        }
     }
 }

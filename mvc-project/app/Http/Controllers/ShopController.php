@@ -41,7 +41,12 @@ class ShopController extends Controller
             $title = 'Kết quả tìm kiếm: ' . $request->search;
         }
 
-        return view('shop.index', compact('products', 'title'));
+        $userFavoriteIds = [];
+        if (auth()->check()) {
+            $userFavoriteIds = \App\Models\Favorite::where('user_id', auth()->id())->pluck('product_id')->toArray();
+        }
+
+        return view('shop.index', compact('products', 'title', 'userFavoriteIds'));
     }
 
     public function collections(Request $request)
@@ -57,7 +62,11 @@ class ShopController extends Controller
                           ->latest()->paginate(12);
         
         $title = 'Bộ sưu tập Lookbook';
-        return view('shop.index', compact('products', 'title'));
+        $userFavoriteIds = [];
+        if (auth()->check()) {
+            $userFavoriteIds = \App\Models\Favorite::where('user_id', auth()->id())->pluck('product_id')->toArray();
+        }
+        return view('shop.index', compact('products', 'title', 'userFavoriteIds'));
     }
 
     public function checkout()
@@ -98,6 +107,14 @@ class ShopController extends Controller
                 'address' => $address
             ]
         );
+
+        // Sync with User profile if logged in
+        if (auth()->check()) {
+            $user = auth()->user();
+            $user->phone = $request->phone;
+            $user->address = $address;
+            $user->save();
+        }
 
         $subtotal = 0;
         foreach ($cartData as $item) {

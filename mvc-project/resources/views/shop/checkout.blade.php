@@ -6,6 +6,7 @@
     <title>Thanh toán - Tiny Flowers</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('images/favicon.svg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary: #0f172a;
@@ -466,15 +467,17 @@
                             </div>
                         </div>
 
-                        <!-- PayPal -->
-                        <div class="payment-option" onclick="selectPayment('paypal')">
+                        <!-- QR Code -->
+                        <div class="payment-option" onclick="selectPayment('qr')">
                             <div class="payment-header">
-                                <input type="radio" name="payment_method" value="paypal" id="pay_paypal">
-                                <label for="pay_paypal">Ví điện tử PayPal</label>
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" class="payment-icon" style="height: 24px; width: auto;" alt="PayPal" onerror="this.style.display='none'">
+                                <input type="radio" name="payment_method" value="qr" id="pay_qr">
+                                <label for="pay_qr">Thanh toán qua mã QR</label>
+                                <div class="payment-box" style="padding: 2px 5px; background: #f0fdf4; border: 1px solid #bbf7d0;">
+                                    <span style="font-size: 11px; font-weight: 800; color: #16a34a;">QUICK QR</span>
+                                </div>
                             </div>
                             <div class="payment-details">
-                                <p class="payment-desc">Bạn sẽ được chuyển hướng đến website PayPal để hoàn tất thanh toán an toàn.</p>
+                                <p class="payment-desc">Chuyển khoản nhanh chóng bằng cách quét mã QR ngân hàng.</p>
                             </div>
                         </div>
 
@@ -489,6 +492,59 @@
                                 <p class="payment-desc">Thanh toán bằng tiền mặt khi shipper giao hàng đến địa chỉ của bạn.</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Step: QR Payment (Dynamic) -->
+                <div class="step-content" id="step-qr-content">
+                    <div class="card" style="text-align: center;">
+                        <h2 class="card-title" style="justify-content: center;">Quét mã QR để thanh toán</h2>
+                        <p style="color: var(--text-light); margin-bottom: 20px;">Vui lòng sử dụng ứng dụng ngân hàng hoặc ví điện tử để quét mã bên dưới.</p>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 20px; border: 2px dashed #e2e8f0; display: inline-block; margin-bottom: 15px; position: relative;">
+                            <img src="{{ asset('images/payment/QR.jpg') }}" alt="QR Payment" style="width: 250px; height: 250px; object-fit: contain; border-radius: 10px;">
+                            <div id="qr-expired-overlay" style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.9); flex-direction: column; align-items: center; justify-content: center; border-radius: 20px;">
+                                <i class="fas fa-exclamation-circle" style="font-size: 40px; color: #ef4444; margin-bottom: 10px;"></i>
+                                <p style="font-weight: 700; color: #ef4444;">Mã đã hết hạn</p>
+                                <button type="button" onclick="resetTimer()" style="background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; margin-top: 10px;">Thử lại</button>
+                            </div>
+                        </div>
+
+                        <!-- Thông tin tài khoản ngân hàng -->
+                        <div style="margin-bottom: 25px; display: flex; flex-direction: column; gap: 8px; align-items: center;">
+                            <div style="background: #ffffff; border: 1px solid #e2e8f0; padding: 15px 20px; border-radius: 12px; width: 100%; max-width: 320px; display: flex; flex-direction: column; gap: 12px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600;">
+                                    <span style="color: var(--text-light);">NGÂN HÀNG</span>
+                                    <span style="color: #16a34a;">VIETCOMBANK</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 700;">
+                                    <span style="color: var(--text-light);">CHỦ TÀI KHOẢN</span>
+                                    <span>TRAN HUU NHAN</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 700;">
+                                    <span style="color: var(--text-light);">SỐ TÀI KHOẢN</span>
+                                    <span style="letter-spacing: 1px; color: var(--primary-light);">1040952448</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 700; padding-top: 10px; border-top: 1px solid #f1f5f9;">
+                                    <span style="color: var(--text-light);">NỘI DUNG CK</span>
+                                    <span id="qr-transfer-content" style="color: #FF7EB3; font-weight: 800; text-transform: uppercase;">Tên người đặt</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="background: #f8fafc; padding: 15px; border-radius: 12px; margin-bottom: 25px;">
+                            <p style="font-size: 14px; color: var(--text-light); margin-bottom: 5px;">Thời gian còn lại để thanh toán</p>
+                            <div id="timer" style="font-size: 32px; font-weight: 800; color: #ef4444; font-family: monospace;">05:00</div>
+                        </div>
+
+                        <div style="text-align: left; background: #eff6ff; padding: 15px; border-radius: 12px; margin-bottom: 25px; border-left: 4px solid #3b82f6;">
+                            <p style="font-size: 13px; color: #1e40af; margin: 0;"><strong>Lưu ý:</strong> Sau khi chuyển khoản thành công, hãy nhấn nút <strong>"Xác nhận đã chuyển"</strong> để chúng tôi kiểm tra đơn hàng của bạn.</p>
+                        </div>
+
+                        <button type="button" id="confirm-qr-btn" class="btn btn-primary" style="width: 100%; justify-content: center; background: #10b981; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            Xác nhận đã chuyển khoản
+                        </button>
                     </div>
                 </div>
 
@@ -567,6 +623,8 @@
     <script>
         let currentStep = 1;
         const totalSteps = 3;
+        let qrTimer = null;
+        let qrConfirmed = false;
 
         function updateStepper() {
             for (let i = 1; i <= totalSteps; i++) {
@@ -585,10 +643,22 @@
             document.querySelectorAll('.step-content').forEach(content => {
                 content.classList.remove('active');
             });
-            document.getElementById(`step-${step}-content`).classList.add('active');
-            
+
             const nextBtn = document.getElementById('next-btn');
             const backBtn = document.getElementById('back-btn');
+
+            if (step === 'qr') {
+                const name = document.getElementById('billing_name').value;
+                document.getElementById('qr-transfer-content').innerText = name.trim();
+                
+                document.getElementById('step-qr-content').classList.add('active');
+                nextBtn.style.display = 'none'; // Hidden until confirmed
+                startTimer(300); // 5 minutes
+                return;
+            }
+
+            document.getElementById(`step-${step}-content`).classList.add('active');
+            nextBtn.style.display = 'flex';
 
             if (step === 1) {
                 backBtn.innerHTML = '<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"19\" y1=\"12\" x2=\"5\" y2=\"12\"></line><polyline points=\"12 19 5 12 12 5\"></polyline></svg> Trở lại giỏ hàng';
@@ -621,6 +691,15 @@
                     }
                 }
                 
+                // If moving from Step 2, check if QR is selected
+                if (currentStep === 2) {
+                    const method = document.querySelector('input[name="payment_method"]:checked').value;
+                    if (method === 'qr' && !qrConfirmed) {
+                        showStep('qr');
+                        return;
+                    }
+                }
+
                 currentStep++;
                 updateStepper();
                 showStep(currentStep);
@@ -632,6 +711,12 @@
         }
 
         function goBack() {
+            if (document.getElementById('step-qr-content').classList.contains('active')) {
+                clearInterval(qrTimer);
+                showStep(2);
+                return;
+            }
+
             if (currentStep > 1) {
                 currentStep--;
                 updateStepper();
@@ -642,8 +727,42 @@
             }
         }
 
+        function startTimer(duration) {
+            clearInterval(qrTimer);
+            let timer = duration, minutes, seconds;
+            const display = document.querySelector('#timer');
+            const overlay = document.getElementById('qr-expired-overlay');
+            overlay.style.display = 'none';
+
+            qrTimer = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(qrTimer);
+                    overlay.style.display = 'flex';
+                }
+            }, 1000);
+        }
+
+        function resetTimer() {
+            startTimer(300);
+        }
+
+        document.getElementById('confirm-qr-btn').addEventListener('click', function() {
+            qrConfirmed = true;
+            clearInterval(qrTimer);
+            goNext();
+        });
+
         function goToStep(step) {
             currentStep = step;
+            qrConfirmed = false; // Reset if going back to edit
             updateStepper();
             showStep(currentStep);
             window.scrollTo({top: 0, behavior: 'smooth'});
@@ -654,6 +773,7 @@
             const radio = document.getElementById(`pay_${method}`);
             radio.checked = true;
             radio.closest('.payment-option').classList.add('active');
+            qrConfirmed = false;
         }
 
         function populateReview() {
@@ -669,7 +789,7 @@
             const method = document.querySelector('input[name="payment_method"]:checked').value;
             let methodLabel = 'Thanh toán khi nhận hàng (COD)';
             if (method === 'card') methodLabel = 'Thẻ Tín dụng / Ghi nợ';
-            if (method === 'paypal') methodLabel = 'Ví điện tử PayPal';
+            if (method === 'qr') methodLabel = 'Chuyển khoản qua mã QR';
 
             document.getElementById('review-billing').innerHTML = `
                 <p><strong>${name}</strong></p>
@@ -686,7 +806,7 @@
 
             document.getElementById('review-payment').innerHTML = `
                 <p><strong>${methodLabel}</strong></p>
-                ${method === 'paypal' ? '<p>' + email + '</p>' : ''}
+                ${method === 'qr' ? '<p style="color: #16a34a; font-weight: 600;"><i class="fas fa-check-circle"></i> Đã xác nhận chuyển khoản</p>' : ''}
             `;
         }
 

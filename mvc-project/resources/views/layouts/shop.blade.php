@@ -6,7 +6,7 @@
     <title>@yield('title', 'Tiny Flowers - Fashion & Streetwear')</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('images/favicon.svg') }}">
     <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -27,6 +27,7 @@
                 <a href="{{ route('shop', ['category' => 'Áo']) }}" class="nav-link {{ request('category') == 'Áo' ? 'active' : '' }}">Áo</a>
                 <a href="{{ route('shop', ['category' => 'Quần']) }}" class="nav-link {{ request('category') == 'Quần' ? 'active' : '' }}">Quần</a>
                 <a href="{{ route('shop', ['category' => 'Phụ kiện']) }}" class="nav-link {{ request('category') == 'Phụ kiện' ? 'active' : '' }}">Phụ kiện</a>
+                <a href="{{ route('profile.favorites') }}" class="nav-link {{ request()->routeIs('profile.favorites') ? 'active' : '' }}">Yêu thích</a>
             </nav>
 
             <div class="header-actions">
@@ -269,6 +270,77 @@
                     }
                 });
             }
+
+            // Wishlist toggle logic
+            document.querySelectorAll('.wishlist-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const productId = this.getAttribute('data-id');
+                    const icon = this.querySelector('i');
+                    let toggleUrl = new URL('{{ route('favorites.toggle') }}');
+                    toggleUrl.hostname = window.location.hostname;
+                    toggleUrl.port = window.location.port;
+                    toggleUrl.protocol = window.location.protocol;
+                    
+                    fetch(toggleUrl.toString(), {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ product_id: productId })
+                    })
+                    .then(response => {
+                        if (response.status === 401) {
+                            window.location.href = '{{ route('login') }}';
+                            return;
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data && data.success) {
+                            if (data.action === 'added') {
+                                this.classList.add('active');
+                                icon.classList.remove('far');
+                                icon.classList.add('fas');
+                                icon.style.color = '#ef4444';
+                                // Simple scale animation
+                                this.style.transform = 'scale(1.2)';
+                                setTimeout(() => this.style.transform = 'scale(1)', 200);
+                            } else {
+                                this.classList.remove('active');
+                                icon.classList.remove('fas');
+                                icon.classList.add('far');
+                                icon.style.color = '#64748b';
+
+                                // Nếu đang ở trang Yêu thích, xóa card khỏi UI
+                                if (window.location.pathname.includes('/favorites')) {
+                                    const card = document.querySelector(`.favorite-item-${productId}`);
+                                    if (card) {
+                                        // Hiệu ứng ẩn card mượt mà
+                                        card.style.opacity = '0';
+                                        card.style.transform = 'scale(0.8)';
+                                        card.style.transition = 'all 0.3s ease';
+                                        
+                                        setTimeout(() => {
+                                            card.remove();
+                                            
+                                            // Kiểm tra nếu không còn sản phẩm nào trong lưới
+                                            const grid = document.querySelector('.product-grid');
+                                            if (grid && grid.querySelectorAll('.product-card').length === 0) {
+                                                // Tải lại trang để hiển thị trạng thái "Danh sách trống"
+                                                window.location.reload();
+                                            }
+                                        }, 300);
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+            });
         });
     </script>
     @yield('scripts')

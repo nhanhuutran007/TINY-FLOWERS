@@ -94,8 +94,8 @@
                     <h4>Thông tin vận chuyển</h4>
                     <div class="summary-box">
                         <ul class="details-list">
-                            <li><span>Người nhận:</span> <span>{{ Auth::user()->fullname }}</span></li>
-                            <li><span>Số điện thoại:</span> <span>{{ Auth::user()->phone ?? 'N/A' }}</span></li>
+                            <li><span>Người nhận:</span> <span>{{ $order->customer->name ?? Auth::user()->fullname }}</span></li>
+                            <li><span>Số điện thoại:</span> <span>{{ $order->customer->phone ?? 'N/A' }}</span></li>
                             <li><span>Địa chỉ:</span> <span>{{ $order->shipping_address }}</span></li>
                             <li><span>Ghi chú:</span> <span>{{ $order->notes ?? 'Không có' }}</span></li>
                         </ul>

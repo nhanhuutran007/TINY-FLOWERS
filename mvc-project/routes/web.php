@@ -22,7 +22,11 @@ Route::middleware(['web'])->group(function () {
     // PUBLIC ROUTES
     Route::get('/', function () {
         $products = \App\Models\Product::with('category')->where('status', 1)->latest()->take(8)->get();
-        return view('welcome', compact('products'));
+        $userFavoriteIds = [];
+        if (auth()->check()) {
+            $userFavoriteIds = \App\Models\Favorite::where('user_id', auth()->id())->pluck('product_id')->toArray();
+        }
+        return view('welcome', compact('products', 'userFavoriteIds'));
     })->name('home');
 
     Route::get('/shop', [ShopController::class, 'index'])->name('shop');
@@ -95,7 +99,7 @@ Route::middleware(['web'])->group(function () {
     })->name('logout');
 
     // PROTECTED CUSTOMER ROUTES (PROFILE)
-    Route::prefix('profile')->name('profile.')->group(function () {
+    Route::middleware(['auth'])->prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [UserController::class, 'profile'])->name('index');
         Route::post('/update', [UserController::class, 'updateProfile'])->name('update');
         Route::get('/orders', [UserController::class, 'ordersView'])->name('orders');
@@ -113,6 +117,7 @@ Route::middleware(['web'])->group(function () {
     // ACCOUNT & REVIEWS
     Route::get('/my-orders/{order}', [AccountController::class, 'orderDetails'])->name('account.order_details');
     Route::post('/reviews', [AccountController::class, 'storeReview'])->name('reviews.store');
+    Route::post('/favorites/toggle', [AccountController::class, 'toggleFavorite'])->name('favorites.toggle');
 
     // ADMIN ROUTES
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

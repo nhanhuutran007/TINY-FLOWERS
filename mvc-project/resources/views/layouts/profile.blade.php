@@ -127,9 +127,6 @@
             <a href="{{ route('profile.orders') }}" class="nav-item {{ request()->routeIs('profile.orders') ? 'active' : '' }}">
                 <i class="fas fa-shopping-bag"></i> Đơn hàng mua
             </a>
-            <a href="{{ route('profile.favorites') }}" class="nav-item {{ request()->routeIs('profile.favorites') ? 'active' : '' }}">
-                <i class="far fa-heart"></i> Sản phẩm yêu thích
-            </a>
             <a href="{{ route('profile.address') }}" class="nav-item {{ request()->routeIs('profile.address') ? 'active' : '' }}">
                 <i class="fas fa-map-marker-alt"></i> Sổ địa chỉ
             </a>

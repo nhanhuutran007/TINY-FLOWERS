@@ -54,9 +54,14 @@
                     <h3 class="product-name">{{ $product->name }}</h3>
                     <div class="price-cart-row">
                         <p class="product-price">{{ number_format($product->selling_price) }}đ</p>
-                        <button class="add-to-cart-box" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->selling_price }}" data-image="{{ $product->image_url }}">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                        </button>
+                        <div style="display: flex; gap: 8px;">
+                            <button type="button" class="wishlist-btn {{ in_array($product->id, $userFavoriteIds ?? []) ? 'active' : '' }}" data-id="{{ $product->id }}" style="width: 36px; height: 36px; background: white; border: 1px solid #e9ddd2; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #64748b; transition: all 0.3s;">
+                                <i class="{{ in_array($product->id, $userFavoriteIds ?? []) ? 'fas' : 'far' }} fa-heart" style="{{ in_array($product->id, $userFavoriteIds ?? []) ? 'color: #ef4444;' : '' }}"></i>
+                            </button>
+                            <button class="add-to-cart-box" data-id="{{ $product->id }}" data-name="{{ $product->name }}" data-price="{{ $product->selling_price }}" data-image="{{ $product->image_url }}">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

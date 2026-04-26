@@ -123,7 +123,7 @@ class UserController extends Controller
         $user = \Illuminate\Support\Facades\Auth::user();
         if (!$user) return redirect()->route('login');
         
-        $orders = \App\Models\Order::with('items.product')->where('user_id', $user->user_id)->orderBy('created_at', 'desc')->get();
+        $orders = \App\Models\Order::with(['items.product', 'customer'])->where('user_id', $user->user_id)->orderBy('created_at', 'desc')->get();
         
         if ($user->role === 'customer') {
             return view('profile.customer-orders', compact('user', 'orders'));
