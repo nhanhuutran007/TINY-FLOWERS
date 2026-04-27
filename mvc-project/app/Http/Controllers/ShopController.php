@@ -32,7 +32,10 @@ class ShopController extends Controller
             });
         }
 
-        $products = $query->latest()->paginate(15);
+        $products = $query->withAvg('reviews', 'rating')
+                          ->withCount('reviews')
+                          ->latest()
+                          ->paginate(15);
         
         $title = 'Tất cả sản phẩm';
         if ($request->has('category') && $request->category != '') {
@@ -184,5 +187,38 @@ class ShopController extends Controller
         $order = Order::where('order_number', $orderNumber)->with('items')->firstOrFail();
         $title = 'Đặt hàng thành công';
         return view('shop.checkout-success', compact('order', 'title'));
+    }
+
+    public function show($id)
+    {
+        $product = Product::with(['category', 'reviews.user', 'orderItems'])->findOrFail($id);
+        
+        // Cập nhật rating trung bình và số lượng review
+        $product->average_rating = $product->reviews()->avg('rating') ?? 0;
+        $product->reviews_count = $product->reviews()->count();
+        
+        // Tính toán phân bổ sao
+        $ratingBreakdown = [];
+        for ($i = 5; $i >= 1; $i--) {
+            $count = $product->reviews()->where('rating', $i)->count();
+            $percentage = $product->reviews_count > 0 ? ($count / $product->reviews_count) * 100 : 0;
+            $ratingBreakdown[$i] = [
+                'count' => $count,
+                'percentage' => $percentage
+            ];
+        }
+        
+        $relatedProducts = Product::where('category_id', $product->category_id)
+                                  ->where('id', '!=', $product->id)
+                                  ->where('status', 1)
+                                  ->take(4)
+                                  ->get();
+        
+        $userFavoriteIds = [];
+        if (auth()->check()) {
+            $userFavoriteIds = \App\Models\Favorite::where('user_id', auth()->id())->pluck('product_id')->toArray();
+        }
+
+        return view('shop.show', compact('product', 'relatedProducts', 'userFavoriteIds', 'ratingBreakdown'));
     }
 }

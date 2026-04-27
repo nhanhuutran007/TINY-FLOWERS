@@ -15,13 +15,21 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 
 // Tất cả các route đều được bao bọc trong middleware 'web' để chia sẻ Session
 Route::middleware(['web'])->group(function () {
     
     // PUBLIC ROUTES
     Route::get('/', function () {
-        $products = \App\Models\Product::with('category')->where('status', 1)->latest()->take(8)->get();
+        $products = \App\Models\Product::with('category')
+            ->withAvg('reviews', 'rating')
+            ->withCount('reviews')
+            ->where('status', 1)
+            ->latest()
+            ->take(8)
+            ->get();
         $userFavoriteIds = [];
         if (auth()->check()) {
             $userFavoriteIds = \App\Models\Favorite::where('user_id', auth()->id())->pluck('product_id')->toArray();
@@ -30,7 +38,14 @@ Route::middleware(['web'])->group(function () {
     })->name('home');
 
     Route::get('/shop', [ShopController::class, 'index'])->name('shop');
+    Route::get('/shop/{id}', [ShopController::class, 'show'])->name('shop.show');
     Route::get('/collections', [ShopController::class, 'collections'])->name('collections');
+
+    // CART ROUTES
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
 
     // CHECKOUT
     Route::get('/checkout', [ShopController::class, 'checkout'])->name('checkout');
@@ -50,6 +65,10 @@ Route::middleware(['web'])->group(function () {
         $user = \App\Models\User::where('email', $login)->orWhere('username', $login)->first();
 
         if ($user && ($password === 'admin' || \Illuminate\Support\Facades\Hash::check($password, $user->password))) {
+            if ($user->status === 'locked') {
+                return back()->withErrors(['login' => 'Tài khoản của bạn đã bị khóa tạm thời. Vui lòng liên hệ quản trị viên.']);
+            }
+            
             Auth::login($user, $request->has('remember'));
             $request->session()->regenerate(); // QUAN TRỌNG: Làm mới session sau khi login
             
@@ -125,6 +144,7 @@ Route::middleware(['web'])->group(function () {
     Route::resource('products', ProductController::class);
     Route::resource('orders', OrderController::class);
     Route::resource('customers', CustomerController::class);
+    Route::post('/customers/{id}/toggle-status', [CustomerController::class, 'toggleStatus'])->name('customers.toggle-status');
     Route::resource('users', UserController::class);
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');

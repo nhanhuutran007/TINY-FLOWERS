@@ -4,6 +4,68 @@
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/shop.css') }}">
+    <style>
+        .product-image {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 1/1.2;
+            background: #f1f5f9;
+            border-radius: 12px;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .view-more-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover .view-more-overlay {
+            opacity: 1;
+        }
+
+        .btn-view-more {
+            background: #000;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .product-card:hover .btn-view-more {
+            transform: translateY(0);
+        }
+
+        .btn-view-more:hover {
+            background: #334155;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -31,6 +93,9 @@
             <div class="product-card">
                 <div class="product-image">
                     <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
+                    <div class="view-more-overlay">
+                        <button class="btn-view-more" onclick="window.location.href='{{ route('shop.show', $product->id) }}'">Xem thêm</button>
+                    </div>
                 </div>
                 <div class="product-details">
                     <p class="product-category">{{ $product->category->name ?? 'FASHION' }}</p>
@@ -55,4 +120,32 @@
         {{ $products->appends(request()->query())->links('vendor.pagination.custom') }}
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    // AJAX Add to Cart
+    document.querySelectorAll('.add-to-cart-box-ajax').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const productId = this.getAttribute('data-id');
+            fetch('{{ route('cart.add') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ product_id: productId, quantity: 1 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    document.querySelectorAll('.badge-count').forEach(b => b.innerText = data.cartCount);
+                    openCart();
+                    location.reload(); 
+                }
+            });
+        });
+    });
+</script>
 @endsection

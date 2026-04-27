@@ -53,4 +53,28 @@ class CustomerController extends Controller
         }
         return redirect()->route('customers.index')->with('success', 'Xóa khách hàng thành công!');
     }
+
+    public function toggleStatus($id)
+    {
+        $user = User::findOrFail($id);
+        
+        if ($user->role !== 'customer') {
+            return back()->with('error', 'Không thể thay đổi trạng thái của tài khoản này.');
+        }
+
+        if ($user->status === 'active') {
+            $user->status = 'locked';
+            $user->is_active = 0;
+            $msg = 'Đã khóa tài khoản khách hàng tạm thời.';
+        } else {
+            $user->status = 'active';
+            $user->is_active = 1;
+            $msg = 'Đã mở khóa tài khoản khách hàng.';
+        }
+
+        $user->save();
+
+        return redirect()->route('customers.index')->with('success', $msg);
+    }
 }
+

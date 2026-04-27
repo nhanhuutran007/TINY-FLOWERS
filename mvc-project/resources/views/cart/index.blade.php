@@ -125,7 +125,7 @@
                         <span>Tổng tiền:</span>
                         <span style="color: #ef4444;">{{ number_format($total, 0, ',', '.') }}đ</span>
                     </div>
-                    <a href="{{ route('checkout.index') }}" class="btn-checkout">Tiến hành thanh toán</a>
+                    <a href="{{ route('checkout') }}" class="btn-checkout">Tiến hành thanh toán</a>
                     <a href="{{ route('shop') }}" class="btn-continue">Tiếp tục mua sắm</a>
                 </div>
             </div>
