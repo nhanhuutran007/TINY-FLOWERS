@@ -254,6 +254,58 @@
         margin-top: 100px;
     }
 
+    /* Related product cards — sync with shop/index */
+    .product-image {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 1/1.2;
+        background: #f1f5f9;
+        border-radius: 12px;
+    }
+    .product-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    .product-card:hover .product-image img {
+        transform: scale(1.05);
+    }
+    .view-more-overlay {
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+    .product-card:hover .view-more-overlay {
+        opacity: 1;
+    }
+    .btn-view-more {
+        background: #000;
+        color: white;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transform: translateY(20px);
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+    .product-card:hover .btn-view-more {
+        transform: translateY(0);
+    }
+    .btn-view-more:hover {
+        background: #334155;
+    }
+
     @media (max-width: 992px) {
         .product-main { grid-template-columns: 1fr; }
         .product-gallery { position: static; }
@@ -309,7 +361,7 @@
                 {{ $product->description ?? 'Thông tin sản phẩm đang được cập nhật. Sản phẩm được sản xuất với chất liệu cao cấp, đường may tỉ mỉ, mang lại cảm giác thoải mái và phong cách cho người mặc.' }}
             </div>
 
-            <form action="{{ route('cart.add') }}" method="POST">
+            <form id="add-to-cart-form" action="{{ route('cart.add') }}" method="POST">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                 <div class="action-group">
@@ -421,11 +473,11 @@
         <h2 style="font-size: 28px; font-weight: 900; margin-bottom: 40px; color: #1e293b;">Sản phẩm tương tự</h2>
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px;">
             @foreach($relatedProducts as $relProduct)
-                <div class="product-card" onclick="window.location.href='{{ route('shop.show', $relProduct->id) }}'" style="cursor: pointer;">
+                <div class="product-card">
                     <div class="product-image">
                         <img src="{{ $relProduct->image_url }}" alt="{{ $relProduct->name }}">
-                        <div class="product-overlay">
-                            <button class="quick-view-btn"><i class="fas fa-eye"></i> Xem nhanh</button>
+                        <div class="view-more-overlay">
+                            <button class="btn-view-more" onclick="window.location.href='{{ route('shop.show', $relProduct->id) }}'">Xem thêm</button>
                         </div>
                     </div>
                     <div class="product-details">
@@ -453,6 +505,46 @@
 
 @section('scripts')
 <script>
+    // Intercept add-to-cart form — add with selected quantity then open sidebar
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('add-to-cart-form');
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const qty   = parseInt(document.getElementById('qty').value) || 1;
+                const id    = '{{ $product->id }}';
+                const name  = @json($product->name);
+                const price = {{ $product->selling_price }};
+                const image = '{{ $product->image_url }}';
+
+                // Use the global cart array from the layout
+                const existing = cart.find(item => item.id == id);
+                if (existing) {
+                    existing.quantity += qty;
+                } else {
+                    cart.push({ id, name, price, image, quantity: qty });
+                }
+                updateCartUI();
+
+                const sidebar = document.querySelector('.cart-sidebar');
+                const overlay = document.querySelector('.cart-overlay');
+                if (sidebar) sidebar.classList.add('active');
+                if (overlay) overlay.classList.add('active');
+
+                // Visual feedback on button
+                const btn = form.querySelector('button[type="submit"]');
+                if (btn) {
+                    const original = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check"></i> ĐÃ THÊM VÀO GIỎ';
+                    btn.style.background = '#22c55e';
+                    setTimeout(() => {
+                        btn.innerHTML = original;
+                        btn.style.background = '';
+                    }, 1500);
+                }
+            });
+        }
+    });
     function decreaseQty() {
         const input = document.getElementById('qty');
         if (input.value > 1) {

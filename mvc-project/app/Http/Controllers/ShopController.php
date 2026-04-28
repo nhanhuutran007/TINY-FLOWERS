@@ -211,6 +211,8 @@ class ShopController extends Controller
         $relatedProducts = Product::where('category_id', $product->category_id)
                                   ->where('id', '!=', $product->id)
                                   ->where('status', 1)
+                                  ->withAvg('reviews', 'rating')
+                                  ->withCount('reviews')
                                   ->take(4)
                                   ->get();
         

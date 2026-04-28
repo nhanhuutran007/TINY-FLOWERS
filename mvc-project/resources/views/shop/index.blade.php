@@ -65,6 +65,31 @@
         .btn-view-more:hover {
             background: #334155;
         }
+
+        .product-rating-row {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+
+        .product-rating-row .stars {
+            display: flex;
+            gap: 2px;
+            color: #f59e0b;
+            font-size: 11px;
+        }
+
+        .product-rating-row .rating-score {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .product-rating-row .rating-count {
+            font-size: 11px;
+            color: #94a3b8;
+        }
     </style>
 @endsection
 
@@ -100,6 +125,20 @@
                 <div class="product-details">
                     <p class="product-category">{{ $product->category->name ?? 'FASHION' }}</p>
                     <h3 class="product-name">{{ $product->name }}</h3>
+                    @php $avgRating = $product->reviews_avg_rating ?? 0; $reviewCount = $product->reviews_count ?? 0; @endphp
+                    <div class="product-rating-row">
+                        <div class="stars">
+                            @for($s = 1; $s <= 5; $s++)
+                                <i class="{{ $s <= round($avgRating) ? 'fas' : 'far' }} fa-star"></i>
+                            @endfor
+                        </div>
+                        @if($reviewCount > 0)
+                            <span class="rating-score">{{ number_format($avgRating, 1) }}</span>
+                            <span class="rating-count">({{ $reviewCount }})</span>
+                        @else
+                            <span class="rating-count">Chưa có đánh giá</span>
+                        @endif
+                    </div>
                     <div class="price-cart-row" style="display: flex; justify-content: space-between; align-items: center;">
                         <p class="product-price">{{ number_format($product->selling_price) }}đ</p>
                         <div style="display: flex; gap: 8px;">

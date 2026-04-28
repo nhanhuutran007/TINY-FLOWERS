@@ -64,6 +64,31 @@
     .btn-view-more:hover {
         background: #334155;
     }
+
+    .product-rating-row {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 8px;
+    }
+
+    .product-rating-row .stars {
+        display: flex;
+        gap: 2px;
+        color: #f59e0b;
+        font-size: 11px;
+    }
+
+    .product-rating-row .rating-score {
+        font-size: 12px;
+        font-weight: 700;
+        color: #1e293b;
+    }
+
+    .product-rating-row .rating-count {
+        font-size: 11px;
+        color: #94a3b8;
+    }
 </style>
 @endsection
 
@@ -120,6 +145,20 @@
                 <div class="product-details">
                     <p class="product-category">{{ $product->category->name ?? 'FASHION' }}</p>
                     <h3 class="product-name">{{ $product->name }}</h3>
+                    @php $avgRating = $product->reviews_avg_rating ?? 0; $reviewCount = $product->reviews_count ?? 0; @endphp
+                    <div class="product-rating-row">
+                        <div class="stars">
+                            @for($s = 1; $s <= 5; $s++)
+                                <i class="{{ $s <= round($avgRating) ? 'fas' : 'far' }} fa-star"></i>
+                            @endfor
+                        </div>
+                        @if($reviewCount > 0)
+                            <span class="rating-score">{{ number_format($avgRating, 1) }}</span>
+                            <span class="rating-count">({{ $reviewCount }})</span>
+                        @else
+                            <span class="rating-count">Chưa có đánh giá</span>
+                        @endif
+                    </div>
                     <div class="price-cart-row">
                         <p class="product-price">{{ number_format($product->selling_price) }}đ</p>
                         <div style="display: flex; gap: 8px;">
@@ -162,11 +201,24 @@
     <div class="slider-container">
         <div class="slider-track" id="style-track">
             @php
-                $styles = ['minimal/f1.png', 'relax/f1.png', 'sport/f1.png', 'StyleSetSection/f1.png', 'minimal/f2.png', 'relax/f2.png'];
+                $styles = [
+                    'WeekendVibesSection/minimal/f1.png',
+                    'WeekendVibesSection/relax/f1.png',
+                    'WeekendVibesSection/sport/f1.png',
+                    'StyleSetSection/f1.png',
+                    'WeekendVibesSection/minimal/f2.png',
+                    'WeekendVibesSection/relax/f2.png',
+                    'WeekendVibesSection/sport/f2.png',
+                    'StyleSetSection/f2.png',
+                    'WeekendVibesSection/minimal/f3.png',
+                    'WeekendVibesSection/relax/f3.png',
+                    'WeekendVibesSection/sport/f3.png',
+                    'StyleSetSection/f3.png',
+                ];
             @endphp
             @foreach($styles as $style)
                 <div class="slider-item style-item">
-                    <img src="{{ asset('images/source/' . (strpos($style, '/') === false ? 'WeekendVibesSection/' : '') . $style) }}" alt="Style">
+                    <img src="{{ asset('images/source/' . $style) }}" alt="Style">
                 </div>
             @endforeach
         </div>
