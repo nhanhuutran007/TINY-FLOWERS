@@ -17,6 +17,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\GoogleAuthController;
 
 // Tất cả các route đều được bao bọc trong middleware 'web' để chia sẻ Session
 Route::middleware(['web'])->group(function () {
@@ -40,6 +41,10 @@ Route::middleware(['web'])->group(function () {
     Route::get('/shop', [ShopController::class, 'index'])->name('shop');
     Route::get('/shop/{id}', [ShopController::class, 'show'])->name('shop.show');
     Route::get('/collections', [ShopController::class, 'collections'])->name('collections');
+
+    // GOOGLE OAUTH
+    Route::get('/auth/google',          [GoogleAuthController::class, 'redirect'])->name('auth.google');
+    Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
 
     // CART ROUTES
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');

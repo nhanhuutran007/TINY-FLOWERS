@@ -39,6 +39,23 @@
             </div>
         @endif
         
+        <!-- Google Login -->
+        <a href="{{ route('auth.google') }}" class="google-btn" style="display:flex; align-items:center; justify-content:center; gap:10px; text-decoration:none; margin-bottom:20px;">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M19.993 10.239C19.994 9.559 19.935 8.88 19.817 8.209H10.208V12.055H15.711C15.598 12.669 15.359 13.255 15.009 13.777C14.659 14.298 14.205 14.745 13.674 15.09V17.585H16.957C17.959 16.637 18.747 15.493 19.27 14.228C19.793 12.962 20.039 11.603 19.993 10.239Z" fill="#4285F4"/>
+                <path d="M10.186 19.996C12.668 20.065 15.084 19.203 16.939 17.586L13.657 15.09C12.866 15.586 11.971 15.899 11.038 16.005C10.106 16.111 9.161 16.008 8.276 15.703C7.39 15.398 6.588 14.899 5.928 14.244C5.269 13.589 4.77 12.796 4.47 11.924H1.083V14.496C1.931 16.15 3.232 17.54 4.839 18.511C6.447 19.482 8.298 19.996 10.186 19.996Z" fill="#34A853"/>
+                <path d="M4.467 11.915C4.04 10.675 4.04 9.332 4.467 8.092V5.517H1.083C0.371 6.909 0 8.444 0 10.001C0 11.558 0.371 13.093 1.083 14.485L4.467 11.915Z" fill="#FBBC04"/>
+                <path d="M10.199 3.954C11.654 3.931 13.059 4.469 14.113 5.451L17.026 2.6C15.178 0.903 12.732 -0.029 10.2 0.001C8.309 0 6.455 0.514 4.845 1.486C3.235 2.459 1.933 3.85 1.083 5.506L4.472 8.078C4.867 6.891 5.632 5.854 6.66 5.114C7.687 4.375 8.925 3.969 10.199 3.954Z" fill="#EA4335"/>
+            </svg>
+            Đăng nhập với Google
+        </a>
+
+        <div class="auth-divider" style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+            <div class="auth-divider-line" style="flex:1; height:1px; background:#e2e8f0;"></div>
+            <span class="auth-divider-text" style="font-size:13px; color:#94a3b8; font-weight:500;">Hoặc</span>
+            <div class="auth-divider-line" style="flex:1; height:1px; background:#e2e8f0;"></div>
+        </div>
+
         <!-- Login Form -->
         <form method="POST" action="{{ route('login') }}">
             @csrf
