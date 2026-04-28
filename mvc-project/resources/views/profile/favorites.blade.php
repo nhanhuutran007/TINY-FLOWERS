@@ -6,6 +6,92 @@
     <link rel="stylesheet" href="{{ asset('css/shop.css') }}">
     <style>
 
+        .product-image {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 1/1.2;
+            background: #f1f5f9;
+            border-radius: 12px;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        .view-more-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover .view-more-overlay {
+            opacity: 1;
+        }
+
+        .btn-view-more {
+            background: #000;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .product-card:hover .btn-view-more {
+            transform: translateY(0);
+        }
+
+        .btn-view-more:hover {
+            background: #334155;
+        }
+
+        .product-rating-row {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+
+        .product-rating-row .stars {
+            display: flex;
+            gap: 2px;
+            color: #f59e0b;
+            font-size: 11px;
+        }
+
+        .product-rating-row .rating-score {
+            font-size: 12px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .product-rating-row .rating-count {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
         .empty-favorites { 
             text-align: center; 
             padding: 100px 20px;
@@ -40,10 +126,25 @@
                 <div class="product-card favorite-item-{{ $product->id }}">
                     <div class="product-image">
                         <img src="{{ $product->image_url ?? asset('images/welcome/tshirt.png') }}" alt="{{ $product->name }}">
+                        <div class="view-more-overlay">
+                            <a href="{{ route('shop.show', $product->id) }}" class="btn-view-more">Xem chi tiết</a>
+                        </div>
                     </div>
                     <div class="product-details">
                         <p class="product-category">{{ $product->category->name ?? 'FASHION' }}</p>
-                        <h3 class="product-name" style="font-size: 16px; font-weight: 700; margin-bottom: 10px; color: #1e293b;">{{ $product->name }}</h3>
+                        <h3 class="product-name" style="font-size: 16px; font-weight: 700; margin-bottom: 4px; color: #1e293b;">{{ $product->name }}</h3>
+                        
+                        <div class="product-rating-row">
+                            <div class="stars">
+                                @php $avg = round($product->reviews_avg_rating ?? 0); @endphp
+                                @for($i = 1; $i <= 5; $i++)
+                                    <i class="{{ $i <= $avg ? 'fas' : 'far' }} fa-star"></i>
+                                @endfor
+                            </div>
+                            <span class="rating-score">{{ number_format($product->reviews_avg_rating ?? 0, 1) }}</span>
+                            <span class="rating-count">({{ $product->reviews_count ?? 0 }})</span>
+                        </div>
+
                         <div class="price-cart-row" style="display: flex; justify-content: space-between; align-items: center;">
                             <p class="product-price" style="font-weight: 800; color: #FF7EB3; font-size: 18px;">{{ number_format($product->selling_price) }}đ</p>
                             <div style="display: flex; gap: 8px;">

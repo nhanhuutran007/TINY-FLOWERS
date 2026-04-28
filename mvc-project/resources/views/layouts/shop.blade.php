@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/user-dropdown.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
     @yield('styles')
 </head>
 <body>
@@ -205,6 +206,102 @@
             if(sidebar) sidebar.classList.add('active');
             if(overlay) overlay.classList.add('active');
         }
+    </script>
+
+    <!-- Chatbot Assistant -->
+    <div id="chatbot-launcher">
+        TF
+    </div>
+
+    <div id="chatbot-window">
+        <div class="chatbot-header">
+            <div class="chatbot-header-info">
+                <div class="chatbot-avatar">TF</div>
+                <div class="chatbot-name">
+                    <h4>TF Assistant</h4>
+                    <span>Trực tuyến</span>
+                </div>
+            </div>
+            <div class="chatbot-close">
+                <i class="fas fa-times"></i>
+            </div>
+        </div>
+
+        <div id="chatbot-content">
+            <div class="message bot">
+                Chào mừng bạn đến với TINY FLOWERS! Tôi có thể giúp gì cho bạn?
+            </div>
+            <div class="typing" id="chatbot-typing">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+
+        <div class="chatbot-options" id="chatbot-options">
+            <button class="option-btn" data-question="Sản phẩm còn hàng không?" data-answer="Tất cả sản phẩm hiển thị trên website đều đang có sẵn tại kho bạn nhé. Bạn có thể đặt mua ngay!">Sản phẩm còn hàng không?</button>
+            <button class="option-btn" data-question="Thời gian giao hàng bao lâu?" data-answer="Shop hỗ trợ giao hàng toàn quốc với thời gian từ 2-4 ngày làm việc tùy khu vực ạ.">Thời gian giao hàng bao lâu?</button>
+            <button class="option-btn" data-question="Chính sách đổi trả thế nào?" data-answer="Bạn có thể đổi trả sản phẩm trong vòng 7 ngày nếu còn nguyên tem mác và chưa qua sử dụng ạ.">Chính sách đổi trả thế nào?</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const launcher = document.getElementById('chatbot-launcher');
+            const chatWindow = document.getElementById('chatbot-window');
+            const closeBtn = document.querySelector('.chatbot-close');
+            const options = document.getElementById('chatbot-options');
+            const content = document.getElementById('chatbot-content');
+            const typing = document.getElementById('chatbot-typing');
+
+            // Toggle Chat Window
+            launcher.addEventListener('click', () => {
+                chatWindow.classList.toggle('active');
+                launcher.classList.toggle('active');
+            });
+
+            closeBtn.addEventListener('click', () => {
+                chatWindow.classList.remove('active');
+                launcher.classList.remove('active');
+            });
+
+            // Handle Question Clicking
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const question = this.getAttribute('data-question');
+                    const answer = this.getAttribute('data-answer');
+
+                    // Add user message
+                    addMessage(question, 'user');
+
+                    // Disable options during typing
+                    options.style.opacity = '0.5';
+                    options.style.pointerEvents = 'none';
+
+                    // Show typing indicator
+                    typing.style.display = 'flex';
+                    content.scrollTop = content.scrollHeight;
+
+                    // Simulated bot response after 3 seconds
+                    setTimeout(() => {
+                        typing.style.display = 'none';
+                        addMessage(answer, 'bot');
+                        
+                        // Re-enable options
+                        options.style.opacity = '1';
+                        options.style.pointerEvents = 'all';
+                        
+                        content.scrollTop = content.scrollHeight;
+                    }, 3000);
+                });
+            });
+
+            function addMessage(text, side) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `message ${side}`;
+                msgDiv.innerText = text;
+                content.insertBefore(msgDiv, typing);
+                content.scrollTop = content.scrollHeight;
+            }
+        });
 
         window.updateQty = function(index, change) {
             cart[index].quantity += change;
