@@ -505,93 +505,12 @@
 
 @section('scripts')
 <script>
-    // Intercept add-to-cart form — add with selected quantity then open sidebar
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('add-to-cart-form');
-        if (form) {
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                const qty   = parseInt(document.getElementById('qty').value) || 1;
-                const id    = '{{ $product->id }}';
-                const name  = @json($product->name);
-                const price = {{ $product->selling_price }};
-                const image = '{{ $product->image_url }}';
-
-                // Use the global cart array from the layout
-                const existing = cart.find(item => item.id == id);
-                if (existing) {
-                    existing.quantity += qty;
-                } else {
-                    cart.push({ id, name, price, image, quantity: qty });
-                }
-                updateCartUI();
-
-                const sidebar = document.querySelector('.cart-sidebar');
-                const overlay = document.querySelector('.cart-overlay');
-                if (sidebar) sidebar.classList.add('active');
-                if (overlay) overlay.classList.add('active');
-
-                // Visual feedback on button
-                const btn = form.querySelector('button[type="submit"]');
-                if (btn) {
-                    const original = btn.innerHTML;
-                    btn.innerHTML = '<i class="fas fa-check"></i> ĐÃ THÊM VÀO GIỎ';
-                    btn.style.background = '#22c55e';
-                    setTimeout(() => {
-                        btn.innerHTML = original;
-                        btn.style.background = '';
-                    }, 1500);
-                }
-            });
-        }
-    });
-    function decreaseQty() {
-        const input = document.getElementById('qty');
-        if (input.value > 1) {
-            input.value = parseInt(input.value) - 1;
-        }
-    }
-
-    function increaseQty() {
-        const input = document.getElementById('qty');
-        const max = parseInt(input.getAttribute('max'));
-        if (input.value < max) {
-            input.value = parseInt(input.value) + 1;
-        }
-    }
-
-    function toggleFavorite(productId, btnElement) {
-        fetch('{{ route('favorites.toggle') }}', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({ product_id: productId })
-        })
-        .then(response => {
-            if (response.status === 401) {
-                window.location.href = "{{ route('login') }}";
-                return Promise.reject('Unauthorized');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if(data.success) {
-                const icon = btnElement.querySelector('i');
-                if (data.action === 'added') {
-                    btnElement.classList.add('active');
-                    icon.classList.remove('far');
-                    icon.classList.add('fas');
-                } else {
-                    btnElement.classList.remove('active');
-                    icon.classList.remove('fas');
-                    icon.classList.add('far');
-                }
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
+    window.PRODUCT_DATA = {
+        id: '{{ $product->id }}',
+        name: @json($product->name),
+        price: {{ $product->selling_price }},
+        image: '{{ $product->image_url }}'
+    };
 </script>
+<script src="{{ asset('js/product-detail.js') }}"></script>
 @endsection
