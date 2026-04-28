@@ -40,7 +40,7 @@
                     @if(Auth::check())
                         <div class="user-menu-container">
                             <button class="user-avatar-btn" id="userMenuBtn">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->fullname) }}&background=319DFF&color=fff" alt="Avatar">
+                                <img src="{{ Auth::user()->profile_picture ? asset('images/avatars/' . Auth::user()->profile_picture) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->fullname) . '&background=319DFF&color=fff' }}" alt="Avatar">
                             </button>
                             <div class="user-dropdown-content" id="userDropdown">
                                 <div class="dropdown-user-info">

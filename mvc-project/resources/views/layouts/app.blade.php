@@ -161,18 +161,18 @@
                 <div class="position-relative">
                     <button class="user-pic" type="button" id="topbar-user-btn">
                         @php
-                            $userFromDb = \App\Models\User::where('email', 'admin@admin.com')->first();
-                            $avatarUrl = $userFromDb && $userFromDb->profile_picture
-                                ? asset('images/avatars/' . $userFromDb->profile_picture)
-                                : 'https://ui-avatars.com/api/?name=' . urlencode(session('user.name', 'Admin')) . '&background=319DFF&color=fff';
+                            $user = Auth::user();
+                            $avatarUrl = $user && $user->profile_picture
+                                ? asset('images/avatars/' . $user->profile_picture)
+                                : 'https://ui-avatars.com/api/?name=' . urlencode($user->fullname ?? 'User') . '&background=319DFF&color=fff';
                         @endphp
                         <img src="{{ $avatarUrl }}" alt="Avatar" />
                     </button>
                     <!-- User Dropdown -->
                     <div id="user-dropdown" class="user-dropdown-menu d-none">
                         <div class="user-info-header">
-                            <span class="user-name">{{ session('user.name', 'Admin User') }}</span>
-                            <span class="user-role">{{ ucfirst(session('user.role', 'Quản trị viên')) }}</span>
+                            <span class="user-name">{{ Auth::user()->fullname }}</span>
+                            <span class="user-role">{{ ucfirst(Auth::user()->role) }}</span>
                         </div>
                         <hr>
                         <a href="{{ route('profile.index') }}"><i class="fas fa-user-circle"></i> Hồ sơ của tôi</a>
