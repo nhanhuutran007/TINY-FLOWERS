@@ -31,8 +31,8 @@ class GoogleAuthController extends Controller
 
         // Find existing user by google_id or email
         $user = User::where('google_id', $googleUser->getId())
-                    ->orWhere('email', $googleUser->getEmail())
-                    ->first();
+            ->orWhere('email', $googleUser->getEmail())
+            ->first();
 
         if ($user) {
             // Update google_id if logging in via email-matched account
@@ -51,19 +51,19 @@ class GoogleAuthController extends Controller
             }
 
             $user = User::create([
-                'fullname'   => $googleUser->getName(),
-                'username'   => $username,
-                'email'      => $googleUser->getEmail(),
-                'google_id'  => $googleUser->getId(),
-                'password'   => bcrypt(Str::random(24)),
-                'role'       => 'customer',
-                'status'     => 1,
+                'fullname' => $googleUser->getName(),
+                'username' => $username,
+                'email' => $googleUser->getEmail(),
+                'google_id' => $googleUser->getId(),
+                'password' => bcrypt(Str::random(24)),
+                'role' => 'customer',
+                'status' => 1,
             ]);
         }
 
-        if ($user->status == 'locked' || $user->status === 0) {
+        if ($user->status == 'locked' || $user->status === 0 || $user->status === '0') {
             return redirect()->route('login')
-                ->withErrors(['login' => 'Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.']);
+                ->withErrors(['login' => 'Tài khoản bị tạm khóa vui lòng liên hệ admin tại sđt: 0869918250']);
         }
 
         Auth::login($user, true);
