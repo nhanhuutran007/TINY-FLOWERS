@@ -1,5 +1,16 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteCond %{REQUEST_URI} !^/mvc-project/public/
+
+    # 1. Tự động nhận diện thư mục gốc (Dù là /TINY-FLOWERS/ hay /)
+    RewriteCond %{REQUEST_URI} ^/(TINY-FLOWERS/)?(.*)$
+
+    # 2. Nếu là file tĩnh (CSS, JS, Ảnh), hãy tìm trong mvc-project/public
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_URI} \.(css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|otf)$ [NC]
     RewriteRule ^(.*)$ mvc-project/public/$1 [L]
+
+    # 3. Các đường dẫn còn lại, đẩy vào file index.php cầu nối
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [L]
 </IfModule>
