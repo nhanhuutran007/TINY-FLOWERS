@@ -149,6 +149,8 @@ Route::middleware(['web'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
+    Route::get('/orders/export-pdf', [OrderController::class, 'exportPdf'])->name('orders.exportPdf');
+    Route::get('/orders/{order}/print', [OrderController::class, 'printBill'])->name('orders.print');
     Route::resource('orders', OrderController::class);
     Route::resource('customers', CustomerController::class);
     Route::post('/customers/{id}/toggle-status', [CustomerController::class, 'toggleStatus'])->name('customers.toggle-status');

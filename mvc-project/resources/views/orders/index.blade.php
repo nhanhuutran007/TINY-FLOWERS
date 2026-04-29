@@ -23,8 +23,14 @@
             <div class="panel-header">
                 <h2 class="panel-title">Danh sách đơn hàng</h2>
                 <div class="panel-actions">
-                    <button class="btn-secondary-custom"><i class="fas fa-filter"></i> Bộ lọc</button>
-                    <button class="btn-secondary-custom"><i class="fas fa-download"></i> Xuất file</button>
+                    <form action="{{ route('orders.index') }}" method="GET" style="display: flex; gap: 10px; align-items: center; margin-right: 10px;">
+                        <input type="date" name="date_from" value="{{ $dateFrom ?? '' }}" class="form-control" style="padding: 6px 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px;">
+                        <span>-</span>
+                        <input type="date" name="date_to" value="{{ $dateTo ?? '' }}" class="form-control" style="padding: 6px 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px;">
+                        <button type="submit" class="btn-secondary-custom"><i class="fas fa-filter"></i> Lọc</button>
+                        <a href="{{ route('orders.index') }}" class="btn-secondary-custom" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;" title="Xóa bộ lọc"><i class="fas fa-times"></i></a>
+                    </form>
+                    <a href="{{ route('orders.exportPdf', ['date_from' => $dateFrom ?? '', 'date_to' => $dateTo ?? '']) }}" target="_blank" class="btn-secondary-custom" style="text-decoration: none; display: inline-flex; align-items: center; justify-content: center;"><i class="fas fa-file-pdf" style="margin-right: 5px; color: #ef4444;"></i> Xuất PDF</a>
                 </div>
             </div>
 
@@ -78,7 +84,10 @@
                                 @endif
                             </td>
                             <td style="text-align: right;">
-                                <a href="{{ route('orders.show', $order->id) }}" class="btn-action view">
+                                <a href="{{ route('orders.print', $order->id) }}" target="_blank" class="btn-action print" title="In phiếu giao hàng">
+                                    <i class="fas fa-print"></i>
+                                </a>
+                                <a href="{{ route('orders.show', $order->id) }}" class="btn-action view" title="Xem chi tiết">
                                     <i class="fas fa-eye"></i>
                                 </a>
                                 <form action="{{ route('orders.destroy', $order->id) }}" method="POST" style="display: inline;">
@@ -109,6 +118,8 @@
         .btn-action { width: 32px; height: 32px; border-radius: 6px; border: none; cursor: pointer; transition: all 0.2s; margin-left: 5px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
         .btn-action.view { background: #e0f2fe; color: #0ea5e9; }
         .btn-action.view:hover { background: #0ea5e9; color: white; }
+        .btn-action.print { background: #f3e8ff; color: #a855f7; }
+        .btn-action.print:hover { background: #a855f7; color: white; }
         .btn-action.delete { background: #fee2e2; color: #ef4444; }
         .btn-action.delete:hover { background: #ef4444; color: white; }
         .panel-actions { display: flex; align-items: center; }

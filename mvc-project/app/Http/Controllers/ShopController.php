@@ -143,10 +143,15 @@ class ShopController extends Controller
             $order->discount = 0;
             $order->shipping_fee = $shippingFee;
             $order->total_amount = $totalAmount;
-            $order->amount_paid = 0;
+            if ($request->payment_method === 'qr' || $request->payment_method === 'card') {
+                $order->amount_paid = $totalAmount;
+                $order->payment_status = 'paid';
+            } else {
+                $order->amount_paid = 0;
+                $order->payment_status = 'pending';
+            }
             $order->change_amount = 0;
             $order->payment_method = $request->payment_method;
-            $order->payment_status = 'pending';
             $order->shipping_address = $address;
             $order->notes = $request->notes;
             $order->status = 'pending';
