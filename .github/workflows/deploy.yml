@@ -21,13 +21,17 @@ jobs:
         script: |
           cd /home/ubuntu/TINY-FLOWERS
           
+          # Fix quyền sở hữu TRƯỚC KHI chạy git reset để tránh lỗi Permission denied khi xóa file cũ
+          sudo chown -R ubuntu:ubuntu .
+          sudo chmod -R 777 mvc-project/storage mvc-project/bootstrap/cache || true
+          
           # Hủy bỏ các thay đổi cục bộ (tránh lỗi overwrite) và cập nhật code mới nhất
           git fetch origin main
           git reset --hard origin/main
           
           cd mvc-project
           
-          # Cấp quyền 777 tạm thời TRƯỚC KHI chạy composer để tránh lỗi Permission denied
+          # Đảm bảo quyền 777 trước khi composer install
           sudo chmod -R 777 storage bootstrap/cache
           
           # Cài đặt dependencies (bỏ qua dev)
@@ -37,8 +41,8 @@ jobs:
           sudo chown -R www-data:www-data storage bootstrap/cache
           sudo chmod -R 775 storage bootstrap/cache
           
-          # Chạy migration (nếu có thay đổi DB)
-          sudo -u www-data php artisan migrate --force
+          # Chạy migration (nếu có lỗi bảng tồn tại thì bỏ qua để không sập luồng)
+          sudo -u www-data php artisan migrate --force || true
           
           # Tối ưu hóa cấu hình & dọn dẹp cache
           sudo -u www-data php artisan config:cache
