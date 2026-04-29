@@ -155,6 +155,7 @@ Route::middleware(['web'])->group(function () {
     Route::resource('users', UserController::class);
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/export-pdf', [ReportController::class, 'exportPdf'])->name('reports.exportPdf');
 });
 
 // PASSWORD RECOVERY (OUTSIDE GROUP IF NEEDED, BUT USUALLY INSIDE)

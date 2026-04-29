@@ -45,13 +45,16 @@
             <div class="panel">
                 <div class="panel-header">
                     <h2 class="panel-title">Biểu đồ doanh thu theo thời gian</h2>
-                    <div class="panel-actions">
-                        <select class="select-custom">
-                            <option>Tháng này</option>
-                            <option>Tháng trước</option>
-                            <option>Năm nay</option>
+                    <form id="filterForm" method="GET" action="{{ route('reports.index') }}" class="panel-actions" style="display: flex; gap: 10px;">
+                        <select name="filter" class="select-custom" onchange="document.getElementById('filterForm').submit()">
+                            <option value="this_month" {{ request('filter') == 'this_month' ? 'selected' : '' }}>Tháng này</option>
+                            <option value="last_month" {{ request('filter') == 'last_month' ? 'selected' : '' }}>Tháng trước</option>
+                            <option value="this_year" {{ request('filter') == 'this_year' ? 'selected' : '' }}>Năm nay</option>
                         </select>
-                    </div>
+                        <a href="{{ route('reports.exportPdf', ['filter' => request('filter', 'this_month')]) }}" target="_blank" style="padding: 8px 15px; border-radius: 8px; background-color: #ef4444; color: white; text-decoration: none; font-size: 13px; font-weight: bold; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+                            <i class="fas fa-file-pdf"></i> Xuất PDF
+                        </a>
+                    </form>
                 </div>
                 <div class="chart-container" style="height: 400px;">
                     <canvas id="revenueChartDetailed"></canvas>
