@@ -4,9 +4,9 @@
     # 1. Tự động nhận diện thư mục gốc (Dù là /TINY-FLOWERS/ hay /)
     RewriteCond %{REQUEST_URI} ^/(TINY-FLOWERS/)?(.*)$
 
-    # 2. Nếu là file tĩnh (CSS, JS, Ảnh), hãy tìm trong mvc-project/public
+    # 2. Nếu là file tĩnh (CSS, JS, Ảnh, Video), hãy tìm trong mvc-project/public
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_URI} \.(css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|otf)$ [NC]
+    RewriteCond %{REQUEST_URI} \.(css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|otf|mp4|webm)$ [NC]
     RewriteRule ^(.*)$ mvc-project/public/$1 [L]
 
     # 3. Các đường dẫn còn lại, đẩy vào file index.php cầu nối
