@@ -72,8 +72,8 @@
         </div>
 
         <div class="order-items">
-            @foreach($order->items->take(2) as $item)
-                <div class="item-row">
+            @foreach($order->items as $index => $item)
+                <div class="item-row {{ $index >= 2 ? 'extra-item-' . $order->order_number : '' }}" style="{{ $index >= 2 ? 'display: none;' : '' }}">
                     <img src="{{ $item->product->image_url ?? asset('images/welcome/tshirt.png') }}" class="item-image">
                     <div class="item-details">
                         <div class="item-name">{{ $item->product_name }}</div>
@@ -83,7 +83,7 @@
                 </div>
             @endforeach
             @if($order->items->count() > 2)
-                <div style="text-align: center; font-size: 12px; color: #94a3b8; margin-top: 10px;">Và {{ $order->items->count() - 2 }} sản phẩm khác...</div>
+                <div id="more-items-{{ $order->order_number }}" style="text-align: center; font-size: 12px; color: #94a3b8; margin-top: 10px;">Và {{ $order->items->count() - 2 }} sản phẩm khác...</div>
             @endif
         </div>
 
@@ -157,6 +157,18 @@
         
         const btnText = btn.querySelector('span');
         btnText.textContent = isVisible ? 'Xem chi tiết' : 'Thu gọn';
+
+        // Toggle extra items
+        const extraItems = document.querySelectorAll('.extra-item-' + orderNumber);
+        extraItems.forEach(item => {
+            item.style.display = isVisible ? 'none' : 'flex';
+        });
+
+        // Toggle "more items" text
+        const moreText = document.getElementById('more-items-' + orderNumber);
+        if (moreText) {
+            moreText.style.display = isVisible ? 'block' : 'none';
+        }
     }
 </script>
 @endsection

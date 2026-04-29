@@ -170,7 +170,7 @@
     </tr>
   </thead>
   <tbody>
-    <?php if ($orders->isEmpty()): ?>
+    <?php if (count($orders) === 0): ?>
     <tr><td colspan="7" class="text-center" style="padding:12px;color:#888;">Không có đơn hàng nào</td></tr>
     <?php else: ?>
       <?php

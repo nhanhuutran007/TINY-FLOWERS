@@ -10,6 +10,8 @@ use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderConfirmationMail;
 
 class ShopController extends Controller
 {
@@ -179,6 +181,16 @@ class ShopController extends Controller
             $customer->save();
 
             DB::commit();
+
+            try {
+                if ($customer->email) {
+                    Mail::to($customer->email)->send(new OrderConfirmationMail($order));
+                } elseif (auth()->check() && auth()->user()->email) {
+                    Mail::to(auth()->user()->email)->send(new OrderConfirmationMail($order));
+                }
+            } catch (\Exception $e) {
+                \Log::error('Lỗi gửi email xác nhận: ' . $e->getMessage());
+            }
 
             return redirect()->route('checkout.success', $order->order_number);
         } catch (\Exception $e) {
