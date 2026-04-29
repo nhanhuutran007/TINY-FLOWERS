@@ -21,15 +21,19 @@ jobs:
         script: |
           cd /home/ubuntu/TINY-FLOWERS
           
-          # Pull mã nguồn mới nhất
-          git pull origin main
+          # Hủy bỏ các thay đổi cục bộ (tránh lỗi overwrite) và cập nhật code mới nhất
+          git fetch origin main
+          git reset --hard origin/main
           
           cd mvc-project
+          
+          # Cấp quyền 777 tạm thời TRƯỚC KHI chạy composer để tránh lỗi Permission denied
+          sudo chmod -R 777 storage bootstrap/cache
           
           # Cài đặt dependencies (bỏ qua dev)
           composer install --no-dev --optimize-autoloader
           
-          # Cấp quyền thư mục (đảm bảo www-data có quyền ghi)
+          # Cấp lại quyền chuẩn (đảm bảo www-data có quyền đọc/ghi an toàn)
           sudo chown -R www-data:www-data storage bootstrap/cache
           sudo chmod -R 775 storage bootstrap/cache
           
