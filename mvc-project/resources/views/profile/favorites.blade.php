@@ -123,6 +123,7 @@
         <div class="product-grid">
             @foreach($favorites as $fav)
                 @php $product = $fav->product; @endphp
+                @if($product)
                 <div class="product-card favorite-item-{{ $product->id }}">
                     <div class="product-image">
                         <img src="{{ $product->image_url ?? asset('images/welcome/tshirt.png') }}" alt="{{ $product->name }}">
@@ -158,6 +159,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
             @endforeach
         </div>
     @else
