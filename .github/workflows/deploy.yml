@@ -1,0 +1,44 @@
+name: Deploy Tiny Flowers to AWS EC2
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Deploy to Server via SSH
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          cd /home/ubuntu/TINY-FLOWERS
+          
+          # Pull mã nguồn mới nhất
+          git pull origin main
+          
+          cd mvc-project
+          
+          # Cài đặt dependencies (bỏ qua dev)
+          composer install --no-dev --optimize-autoloader
+          
+          # Cấp quyền thư mục (đảm bảo www-data có quyền ghi)
+          sudo chown -R www-data:www-data storage bootstrap/cache
+          sudo chmod -R 775 storage bootstrap/cache
+          
+          # Chạy migration (nếu có thay đổi DB)
+          sudo -u www-data php artisan migrate --force
+          
+          # Tối ưu hóa cấu hình & dọn dẹp cache
+          sudo -u www-data php artisan config:cache
+          sudo -u www-data php artisan route:cache
+          sudo -u www-data php artisan view:cache
+          
+          echo "🚀 Deployment successful!"
