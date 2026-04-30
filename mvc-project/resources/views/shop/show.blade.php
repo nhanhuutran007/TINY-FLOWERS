@@ -358,7 +358,7 @@
             <div class="product-price-large">{{ number_format($product->selling_price) }}đ</div>
 
             <div class="product-description">
-                {{ $product->description ?? 'Thông tin sản phẩm đang được cập nhật. Sản phẩm được sản xuất với chất liệu cao cấp, đường may tỉ mỉ, mang lại cảm giác thoải mái và phong cách cho người mặc.' }}
+                {!! !empty($product->description) ? nl2br(e($product->description)) : 'Thông tin sản phẩm đang được cập nhật. Sản phẩm được sản xuất với chất liệu cao cấp, đường may tỉ mỉ, mang lại cảm giác thoải mái và phong cách cho người mặc.' !!}
             </div>
 
             <form id="add-to-cart-form" action="{{ route('cart.add') }}" method="POST">
