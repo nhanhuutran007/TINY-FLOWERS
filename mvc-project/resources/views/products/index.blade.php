@@ -21,7 +21,7 @@
 
         <div class="panel">
             <div class="panel-header">
-                <h2 class="panel-title">Danh sách sản phẩm</h2>
+                <h2 class="panel-title">Danh sách sản phẩm ({{ $products->count() }})</h2>
                 <button class="btn-primary-custom" onclick="openAddProductModal()">
                     <i class="fas fa-plus"></i> Thêm sản phẩm
                 </button>
