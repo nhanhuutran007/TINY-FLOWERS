@@ -17,6 +17,7 @@ class DashboardController extends Controller
         $totalOrders = \App\Models\Order::count();
         $totalCustomers = \App\Models\User::where('role', 'customer')->count();
         $totalProducts = \App\Models\Product::count();
+        $pendingOrdersCount = \App\Models\Order::where('status', 'Pending')->count();
 
         // Advanced Metrics
         $avgOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
@@ -81,7 +82,7 @@ class DashboardController extends Controller
         }
 
         return view('dashboard', compact(
-            'totalRevenue', 'totalOrders', 'totalCustomers', 'totalProducts',
+            'totalRevenue', 'totalOrders', 'totalCustomers', 'totalProducts', 'pendingOrdersCount',
             'recentOrders', 'topSelling', 'chartLabels', 'chartData',
             'avgOrderValue', 'monthlyRevenue', 'revenueGrowth',
             'weeklyLabels', 'weeklyData'

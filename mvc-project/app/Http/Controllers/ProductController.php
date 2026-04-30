@@ -21,6 +21,7 @@ class ProductController extends Controller
         $request->validate([
             'barcode' => 'required|unique:products',
             'name' => 'required',
+            'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'cost_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
@@ -53,6 +54,7 @@ class ProductController extends Controller
         $request->validate([
             'barcode' => 'required|unique:products,barcode,' . $product->id,
             'name' => 'required',
+            'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
             'cost_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',

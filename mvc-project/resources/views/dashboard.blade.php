@@ -160,7 +160,7 @@
                 <div class="stat-card ecom-card">
                     <div class="ecom-card-body">
                         <div class="ecom-card-label">ĐƠN HÀNG MỚI</div>
-                        <div class="ecom-card-value">{{ $recentOrders->where('status', 'Pending')->count() }}</div>
+                        <div class="ecom-card-value">{{ number_format($pendingOrdersCount) }}</div>
                         <div class="ecom-card-trend trend-down">
                             <i class="fas fa-clock"></i> Cần xử lý
                         </div>

@@ -33,6 +33,7 @@
                         <tr>
                             <th>Ảnh</th>
                             <th>Mã vạch / Tên</th>
+                            <th>Mô tả</th>
                             <th>Danh mục</th>
                             <th>Giá nhập / Bán</th>
                             <th>Kho</th>
@@ -50,6 +51,9 @@
                                 <td>
                                     <div style="font-size: 12px; color: #64748b; margin-bottom: 2px;">{{ $product->barcode }}</div>
                                     <div style="font-weight: 600; color: #1e293b;">{{ $product->name }}</div>
+                                </td>
+                                <td style="max-width: 200px; font-size: 13px; color: #64748b;">
+                                    {{ Str::limit($product->description, 50) ?: 'Chưa có mô tả' }}
                                 </td>
                                 <td>
                                     <span style="background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-size: 12px; color: #475569;">
@@ -132,7 +136,7 @@
                             <label>Danh mục <span style="color: red;">*</span></label>
                             <select name="category_id" id="pCategory" required style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;">
                                 <option value="">-- Chọn danh mục --</option>
-                                @foreach($categories->whereNotNull('parent_id') as $category)
+                                @foreach($categories as $category)
                                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                                 @endforeach
                             </select>
@@ -157,6 +161,10 @@
                             <label>Ảnh sản phẩm</label>
                             <input type="file" name="image" id="pImage" accept="image/*">
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả sản phẩm</label>
+                        <textarea name="description" id="pDescription" rows="3" placeholder="Nhập mô tả sản phẩm..."></textarea>
                     </div>
                     <div class="form-group" style="margin-top: 10px;">
                         <label style="display: flex; align-items: center; cursor: pointer;">
@@ -223,6 +231,7 @@
             document.getElementById('pCost').value = product.cost_price;
             document.getElementById('pSelling').value = product.selling_price;
             document.getElementById('pStock').value = product.stock_quantity;
+            document.getElementById('pDescription').value = product.description || '';
             document.getElementById('pStatus').checked = product.status == 1;
             
             pModal.style.display = 'block';
