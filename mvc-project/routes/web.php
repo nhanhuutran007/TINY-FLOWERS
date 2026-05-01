@@ -147,6 +147,7 @@ Route::middleware(['web'])->group(function () {
 
     // ADMIN ROUTES
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/categories/reorder', [CategoryController::class, 'reorder'])->name('categories.reorder');
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
     Route::get('/orders/export-pdf', [OrderController::class, 'exportPdf'])->name('orders.exportPdf');

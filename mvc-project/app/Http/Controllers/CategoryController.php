@@ -9,10 +9,19 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        // Sử dụng cột type để phân loại rạch ròi
-        $categories = Category::with('parent')->where('type', 'child')->get();
-        $parentCategories = Category::where('type', 'parent')->get();
+        // Sử dụng cột type và position để phân loại và sắp xếp
+        $categories = Category::with('parent')->where('type', 'child')->orderBy('position', 'asc')->orderBy('name', 'asc')->get();
+        $parentCategories = Category::where('type', 'parent')->orderBy('position', 'asc')->orderBy('name', 'asc')->get();
         return view('categories.index', compact('categories', 'parentCategories'));
+    }
+
+    public function reorder(Request $request)
+    {
+        $positions = $request->positions; // Array of IDs in order
+        foreach ($positions as $index => $id) {
+            Category::where('id', $id)->update(['position' => $index]);
+        }
+        return response()->json(['success' => true]);
     }
 
     public function store(Request $request)

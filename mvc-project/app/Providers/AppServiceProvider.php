@@ -22,7 +22,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', function ($view) {
-            $globalCategories = Category::with('children')->whereNull('parent_id')->get();
+            $globalCategories = Category::with(['children' => function($q) {
+                $q->orderBy('position', 'asc')->orderBy('name', 'asc');
+            }])
+            ->whereNull('parent_id')
+            ->orderBy('position', 'asc')
+            ->orderBy('name', 'asc')
+            ->get();
             $view->with('globalCategories', $globalCategories);
         });
     }

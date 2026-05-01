@@ -5,7 +5,8 @@
 @section('content')
     <div class="page-title-bar">
         <h1 class="page-title-text">Quản lý danh mục</h1>
-        <div class="breadcrumb">
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <div class="breadcrumb">
             <a href="{{ route('dashboard') }}">Dashboard</a>
             <i class="fas fa-chevron-right" style="font-size: 10px; margin: 0 10px; color: #aaa;"></i>
             <span>Danh mục</span>
@@ -27,14 +28,17 @@
                     <i class="fas fa-plus"></i> Thêm danh mục mới
                 </button>
             </div>
-            <div
+            <div id="parentSortableContainer"
                 style="padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
                 @foreach($parentCategories as $parent)
-                    <div
-                        style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div style="font-weight: 700; color: #1e293b;">{{ $parent->name }}</div>
-                            <div style="font-size: 11px; color: #64748b;">{{ $parent->children->count() }} danh mục con</div>
+                    <div class="category-card-sortable" data-id="{{ $parent->id }}"
+                        style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center; cursor: grab;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-grip-vertical" style="color: #cbd5e1;"></i>
+                            <div>
+                                <div style="font-weight: 700; color: #1e293b;">{{ $parent->name }}</div>
+                                <div style="font-size: 11px; color: #64748b;">{{ $parent->children->count() }} danh mục con</div>
+                            </div>
                         </div>
                         <div style="display: flex; gap: 5px;">
                             <button class="btn-action edit" onclick="openEditModal({{ json_encode($parent) }})"
@@ -409,5 +413,37 @@
             }
             return true;
         };
+        // Sortable Logic
+        const parentContainer = document.getElementById('parentSortableContainer');
+        if (parentContainer) {
+            new Sortable(parentContainer, {
+                animation: 150,
+                ghostClass: 'sortable-ghost',
+                onEnd: function() {
+                    const positions = [];
+                    document.querySelectorAll('.category-card-sortable').forEach(el => {
+                        positions.push(el.getAttribute('data-id'));
+                    });
+                    
+                    fetch('{{ route('categories.reorder') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({ positions: positions })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log('Order updated');
+                        }
+                    });
+                }
+            });
+        }
     </script>
+    <style>
+        .sortable-ghost { opacity: 0.4; border: 2px dashed #319DFF !important; }
+    </style>
 @endsection
