@@ -9,8 +9,9 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('parent')->get();
-        $parentCategories = Category::whereNull('parent_id')->get();
+        // Sử dụng cột type để phân loại rạch ròi
+        $categories = Category::with('parent')->where('type', 'child')->get();
+        $parentCategories = Category::where('type', 'parent')->get();
         return view('categories.index', compact('categories', 'parentCategories'));
     }
 
@@ -19,10 +20,17 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|unique:categories|max:255',
             'description' => 'nullable',
-            'parent_id' => 'nullable|exists:categories,id'
+            'cat_type' => 'required|in:parent,child',
+            'parent_id' => $request->cat_type === 'child' ? 'required|exists:categories,id' : 'nullable'
         ]);
 
-        Category::create($request->all());
+        $data = $request->all();
+        $data['type'] = $request->cat_type;
+        if ($request->cat_type === 'parent') {
+            $data['parent_id'] = null;
+        }
+
+        Category::create($data);
 
         return redirect()->route('categories.index')->with('success', 'Thêm danh mục thành công!');
     }
@@ -32,10 +40,17 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|max:255|unique:categories,name,' . $category->id,
             'description' => 'nullable',
-            'parent_id' => 'nullable|exists:categories,id'
+            'cat_type' => 'required|in:parent,child',
+            'parent_id' => $request->cat_type === 'child' ? 'required|exists:categories,id' : 'nullable'
         ]);
 
-        $category->update($request->all());
+        $data = $request->all();
+        $data['type'] = $request->cat_type;
+        if ($request->cat_type === 'parent') {
+            $data['parent_id'] = null;
+        }
+
+        $category->update($data);
 
         return redirect()->route('categories.index')->with('success', 'Cập nhật danh mục thành công!');
     }

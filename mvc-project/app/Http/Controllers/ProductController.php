@@ -13,7 +13,8 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with('category')->latest()->get();
-        $categories = Category::all();
+        // Chỉ cho phép chọn danh mục con khi quản lý sản phẩm
+        $categories = Category::where('type', 'child')->get();
         return view('products.index', compact('products', 'categories'));
     }
 
@@ -23,11 +24,13 @@ class ProductController extends Controller
             'barcode' => 'required|unique:products',
             'name' => 'required',
             'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => 'required|exists:categories,id,type,child',
             'cost_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ], [
+            'category_id.exists' => 'Danh mục đã chọn phải là danh mục con.'
         ]);
 
         try {
@@ -63,11 +66,13 @@ class ProductController extends Controller
             'barcode' => 'required|unique:products,barcode,' . $product->id,
             'name' => 'required',
             'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => 'required|exists:categories,id,type,child',
             'cost_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ], [
+            'category_id.exists' => 'Danh mục đã chọn phải là danh mục con.'
         ]);
 
         try {

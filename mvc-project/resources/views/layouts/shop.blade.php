@@ -24,12 +24,82 @@
 
             <nav class="main-nav">
                 <a href="{{ route('shop', ['category' => 'Sale']) }}" class="nav-link sale {{ request('category') == 'Sale' ? 'active' : '' }}">SALE</a>
-                <a href="{{ route('shop', ['category' => 'Trang phục']) }}" class="nav-link {{ request('category') == 'Trang phục' ? 'active' : '' }}">Trang phục</a>
-                <a href="{{ route('shop', ['category' => 'Áo']) }}" class="nav-link {{ request('category') == 'Áo' ? 'active' : '' }}">Áo</a>
-                <a href="{{ route('shop', ['category' => 'Quần']) }}" class="nav-link {{ request('category') == 'Quần' ? 'active' : '' }}">Quần</a>
-                <a href="{{ route('shop', ['category' => 'Phụ kiện']) }}" class="nav-link {{ request('category') == 'Phụ kiện' ? 'active' : '' }}">Phụ kiện</a>
+                
+                @foreach($globalCategories as $cat)
+                    @if($cat->children->count() > 0)
+                        <div class="nav-item-dropdown">
+                            <a href="{{ route('shop', ['category' => $cat->name]) }}" class="nav-link {{ request('category') == $cat->name ? 'active' : '' }}">
+                                {{ $cat->name }} <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i>
+                            </a>
+                            <div class="dropdown-menu-custom">
+                                @foreach($cat->children as $child)
+                                    <a href="{{ route('shop', ['category' => $child->name]) }}">{{ $child->name }}</a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ route('shop', ['category' => $cat->name]) }}" class="nav-link {{ request('category') == $cat->name ? 'active' : '' }}">{{ $cat->name }}</a>
+                    @endif
+                @endforeach
+
                 <a href="{{ route('profile.favorites') }}" class="nav-link {{ request()->routeIs('profile.favorites') ? 'active' : '' }}">Yêu thích</a>
             </nav>
+
+            <style>
+                .nav-item-dropdown {
+                    position: relative;
+                    display: inline-block;
+                }
+                .dropdown-menu-custom {
+                    display: none;
+                    position: absolute;
+                    top: 100%;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background-color: white;
+                    min-width: 180px;
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                    border-radius: 12px;
+                    padding: 10px 0;
+                    z-index: 1000;
+                    border: 1px solid #f1f5f9;
+                    margin-top: 10px;
+                }
+                .dropdown-menu-custom::before {
+                    content: '';
+                    position: absolute;
+                    top: -6px;
+                    left: 50%;
+                    transform: translateX(-50%) rotate(45deg);
+                    width: 12px;
+                    height: 12px;
+                    background: white;
+                    border-left: 1px solid #f1f5f9;
+                    border-top: 1px solid #f1f5f9;
+                }
+                .dropdown-menu-custom a {
+                    color: #475569;
+                    padding: 10px 20px;
+                    text-decoration: none;
+                    display: block;
+                    font-size: 14px;
+                    font-weight: 500;
+                    transition: all 0.2s;
+                }
+                .dropdown-menu-custom a:hover {
+                    background-color: #f8fafc;
+                    color: #319DFF;
+                    padding-left: 25px;
+                }
+                .nav-item-dropdown:hover .dropdown-menu-custom {
+                    display: block;
+                    animation: fadeIn 0.2s ease-out;
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+                    to { opacity: 1; transform: translateX(-50%) translateY(0); }
+                }
+            </style>
 
             <div class="header-actions">
                 <form action="{{ route('shop') }}" method="GET" class="search-bar">

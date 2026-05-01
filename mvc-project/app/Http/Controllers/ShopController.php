@@ -21,9 +21,20 @@ class ShopController extends Controller
 
         if ($request->has('category') && $request->category != '') {
             $categoryName = $request->category;
-            $query->whereHas('category', function($q) use ($categoryName) {
-                $q->where('name', 'like', '%' . $categoryName . '%');
-            });
+            
+            if ($categoryName === 'Sale') {
+                $query->where('name', 'like', '%Sale%'); // Or custom sale logic
+            } else {
+                $category = Category::where('name', $categoryName)->first();
+                if ($category) {
+                    $categoryIds = [$category->id];
+                    // Get all children IDs if any
+                    $childIds = Category::where('parent_id', $category->id)->pluck('id')->toArray();
+                    $categoryIds = array_merge($categoryIds, $childIds);
+                    
+                    $query->whereIn('category_id', $categoryIds);
+                }
+            }
         }
 
         if ($request->has('search') && $request->search != '') {
