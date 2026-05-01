@@ -104,9 +104,9 @@
 <div class="shop-container" style="max-width: 1400px; margin: 40px auto; padding: 0 40px;">
     <div class="shop-filters" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid #e9ddd2;">
         <div class="filter-group" style="display: flex; gap: 15px;">
-            <a href="{{ route('shop') }}" class="filter-btn {{ !request('category') ? 'active' : '' }}">Tất cả</a>
-            <a href="#" class="filter-btn">Phổ biến</a>
-            <a href="#" class="filter-btn">Mới nhất</a>
+            <a href="{{ route('shop') }}" class="filter-btn {{ !request('sort') || request('sort') == 'latest' ? 'active' : '' }}">Tất cả</a>
+            <a href="{{ request()->fullUrlWithQuery(['sort' => 'popular']) }}" class="filter-btn {{ request('sort') == 'popular' ? 'active' : '' }}">Phổ biến</a>
+            <a href="{{ request()->fullUrlWithQuery(['sort' => 'latest']) }}" class="filter-btn {{ request('sort') == 'latest' ? 'active' : '' }}">Mới nhất</a>
         </div>
         <div class="filter-group">
             <span style="font-size: 14px; color: #94a3b8;">Hiển thị {{ $products->count() }} sản phẩm</span>

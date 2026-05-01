@@ -19,6 +19,16 @@ class ShopController extends Controller
     {
         $query = Product::with('category')->where('status', 1);
 
+        // Sorting logic
+        $sort = $request->get('sort', 'latest');
+        if ($sort === 'popular') {
+            $query->withSum('orderItems', 'quantity')
+                  ->orderByDesc('order_items_sum_quantity')
+                  ->orderByDesc('created_at');
+        } else {
+            $query->latest();
+        }
+
         if ($request->has('category') && $request->category != '') {
             $categoryName = $request->category;
             
@@ -47,7 +57,6 @@ class ShopController extends Controller
 
         $products = $query->withAvg('reviews', 'rating')
                           ->withCount('reviews')
-                          ->latest()
                           ->paginate(15);
         
         $title = 'Tất cả sản phẩm';

@@ -22,7 +22,7 @@
 
         <div class="panel" style="margin-bottom: 30px; border-top: 4px solid #319DFF;">
             <div class="panel-header">
-                <h2 class="panel-title" style="font-size: 16px;"><i class="fas fa-sitemap"></i> Danh mục cha (Dùng làm menu Header)</h2>
+                <h2 class="panel-title" style="font-size: 16px;"> Danh mục cha (Dùng làm menu Header)</h2>
                 <button class="btn-primary-custom" onclick="openAddModal()">
                     <i class="fas fa-plus"></i> Thêm danh mục mới
                 </button>
