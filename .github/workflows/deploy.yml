@@ -38,8 +38,8 @@ jobs:
           composer install --no-dev --optimize-autoloader
           
           # Cấp lại quyền chuẩn (đảm bảo www-data có quyền đọc/ghi an toàn)
-          sudo chown -R www-data:www-data storage bootstrap/cache
-          sudo chmod -R 775 storage bootstrap/cache
+          sudo chown -R www-data:www-data storage bootstrap/cache public/images
+          sudo chmod -R 775 storage bootstrap/cache public/images
           
           # Chạy migration (nếu có lỗi bảng tồn tại thì bỏ qua để không sập luồng)
           sudo -u www-data php artisan migrate --force || true
