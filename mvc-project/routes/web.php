@@ -133,7 +133,7 @@ Route::middleware(['web'])->group(function () {
         Route::post('/password', [UserController::class, 'updatePassword'])->name('password.update');
         Route::get('/favorites', function() {
             $user = Auth::user();
-            $favorites = $user->favorites()->with(['product' => function($query) {
+            $favorites = $user->favorites()->whereHas('product')->with(['product' => function($query) {
                 $query->withAvg('reviews', 'rating')->withCount('reviews');
             }])->get();
             return view('profile.favorites', compact('user', 'favorites'));
