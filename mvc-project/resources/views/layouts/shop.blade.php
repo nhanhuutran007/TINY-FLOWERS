@@ -29,7 +29,7 @@
                     @if($cat->children->count() > 0)
                         <div class="nav-item-dropdown">
                             <a href="{{ route('shop', ['category' => $cat->name]) }}" class="nav-link {{ request('category') == $cat->name ? 'active' : '' }}">
-                                {{ $cat->name }} <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i>
+                                {{ $cat->name }}
                             </a>
                             <div class="dropdown-menu-custom">
                                 @foreach($cat->children as $child)
@@ -50,6 +50,16 @@
                     position: relative;
                     display: inline-block;
                 }
+                /* Bridge to prevent closing when moving mouse */
+                .nav-item-dropdown::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -15px;
+                    left: 0;
+                    width: 100%;
+                    height: 15px;
+                    display: block;
+                }
                 .dropdown-menu-custom {
                     display: none;
                     position: absolute;
@@ -63,7 +73,7 @@
                     padding: 10px 0;
                     z-index: 1000;
                     border: 1px solid #f1f5f9;
-                    margin-top: 10px;
+                    margin-top: 12px;
                 }
                 .dropdown-menu-custom::before {
                     content: '';
