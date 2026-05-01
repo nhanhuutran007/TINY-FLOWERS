@@ -125,18 +125,26 @@
                 <div class="product-details">
                     <p class="product-category">{{ $product->category->name ?? 'FASHION' }}</p>
                     <h3 class="product-name">{{ $product->name }}</h3>
-                    @php $avgRating = $product->reviews_avg_rating ?? 0; $reviewCount = $product->reviews_count ?? 0; @endphp
-                    <div class="product-rating-row">
-                        <div class="stars">
-                            @for($s = 1; $s <= 5; $s++)
-                                <i class="{{ $s <= round($avgRating) ? 'fas' : 'far' }} fa-star"></i>
-                            @endfor
+                    @php 
+                        $avgRating = $product->reviews_avg_rating ?? 0; 
+                        $reviewCount = $product->reviews_count ?? 0;
+                        $soldCount = $product->order_items_sum_quantity ?? 0;
+                    @endphp
+                    <div class="product-rating-row" style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <div class="stars">
+                                @for($s = 1; $s <= 5; $s++)
+                                    <i class="{{ $s <= round($avgRating) ? 'fas' : 'far' }} fa-star"></i>
+                                @endfor
+                            </div>
+                            @if($reviewCount > 0)
+                                <span class="rating-score">{{ number_format($avgRating, 1) }}</span>
+                            @endif
                         </div>
-                        @if($reviewCount > 0)
-                            <span class="rating-score">{{ number_format($avgRating, 1) }}</span>
-                            <span class="rating-count">({{ $reviewCount }})</span>
-                        @else
-                            <span class="rating-count">Chưa có đánh giá</span>
+                        @if($soldCount > 0)
+                            <span style="font-size: 11px; color: #10B981; font-weight: 600; background: #ecfdf5; padding: 2px 8px; border-radius: 10px;">
+                                Đã bán {{ $soldCount }}
+                            </span>
                         @endif
                     </div>
                     <div class="price-cart-row" style="display: flex; justify-content: space-between; align-items: center;">

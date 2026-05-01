@@ -18,15 +18,17 @@ class ShopController extends Controller
     public function index(Request $request)
     {
         $query = Product::with('category')->where('status', 1);
+        
+        // Luôn lấy tổng số lượng đã bán để hiển thị trên UI
+        $query->withSum('orderItems', 'quantity');
 
         // Sorting logic
         $sort = $request->get('sort', 'latest');
         if ($sort === 'popular') {
-            $query->withSum('orderItems', 'quantity')
-                  ->orderByDesc('order_items_sum_quantity')
+            $query->orderByRaw('COALESCE(order_items_sum_quantity, 0) DESC')
                   ->orderByDesc('created_at');
         } else {
-            $query->latest();
+            $query->orderByDesc('created_at');
         }
 
         if ($request->has('category') && $request->category != '') {
