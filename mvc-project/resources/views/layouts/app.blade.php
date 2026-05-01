@@ -117,23 +117,6 @@
             </div>
 
             <nav class="div" aria-label="Hành động thanh trên">
-                <button class="select-language" type="button">
-                    <span class="frame-2">
-                        <span class="flag-icon">🇻🇳</span>
-                        <span class="text-wrapper">Tiếng Việt</span>
-                    </span>
-                    <i class="fas fa-chevron-down chevron-icon"></i>
-                </button>
-
-                <span class="nav-divider"></span>
-
-                <button class="switch" type="button" role="switch">
-                    <span class="ellipse">
-                        <i class="fas fa-sun switch-sun-icon"></i>
-                    </span>
-                    <i class="fas fa-moon switch-moon-icon"></i>
-                </button>
-
                 <div class="position-relative">
                     <button class="top-bar-items-2" type="button" id="topbar-notif">
                         <i class="fas fa-bell"></i>
