@@ -20,12 +20,46 @@
             </div>
         @endif
 
+        <div class="panel" style="margin-bottom: 30px; border-top: 4px solid #319DFF;">
+            <div class="panel-header">
+                <h2 class="panel-title" style="font-size: 16px;"><i class="fas fa-sitemap"></i> Danh mục cha (Dùng làm menu Header)</h2>
+                <button class="btn-primary-custom" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> Thêm danh mục mới
+                </button>
+            </div>
+            <div
+                style="padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
+                @foreach($parentCategories as $parent)
+                    <div
+                        style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: 700; color: #1e293b;">{{ $parent->name }}</div>
+                            <div style="font-size: 11px; color: #64748b;">{{ $parent->children->count() }} danh mục con</div>
+                        </div>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="btn-action edit" onclick="openEditModal({{ json_encode($parent) }})"
+                                style="width: 28px; height: 28px;">
+                                <i class="fas fa-edit" style="font-size: 12px;"></i>
+                            </button>
+                            <form action="{{ route('categories.destroy', $parent->id) }}" method="POST"
+                                style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-action delete"
+                                    onclick="return confirm('CẢNH BÁO: Xóa danh mục cha sẽ ảnh hưởng đến các danh mục con. Bạn vẫn muốn xóa?')"
+                                    style="width: 28px; height: 28px;">
+                                    <i class="fas fa-trash" style="font-size: 12px;"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+
         <div class="panel">
             <div class="panel-header">
                 <h2 class="panel-title">Danh sách danh mục con</h2>
-                <button class="btn-primary-custom" onclick="openAddModal()">
-                    <i class="fas fa-plus"></i> Thêm danh mục
-                </button>
             </div>
 
             <table class="dash-table">
@@ -78,40 +112,6 @@
                     @endforelse
                 </tbody>
             </table>
-        </div>
-
-        <div class="panel" style="margin-top: 30px; border-top: 4px solid #319DFF;">
-            <div class="panel-header">
-                <h2 class="panel-title" style="font-size: 16px;"> Danh mục cha (Dùng làm menu Header)</h2>
-            </div>
-            <div
-                style="padding: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
-                @foreach($parentCategories as $parent)
-                    <div
-                        style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <div style="font-weight: 700; color: #1e293b;">{{ $parent->name }}</div>
-                            <div style="font-size: 11px; color: #64748b;">{{ $parent->children->count() }} danh mục con</div>
-                        </div>
-                        <div style="display: flex; gap: 5px;">
-                            <button class="btn-action edit" onclick="openEditModal({{ json_encode($parent) }})"
-                                style="width: 28px; height: 28px;">
-                                <i class="fas fa-edit" style="font-size: 12px;"></i>
-                            </button>
-                            <form action="{{ route('categories.destroy', $parent->id) }}" method="POST"
-                                style="display: inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn-action delete"
-                                    onclick="return confirm('CẢNH BÁO: Xóa danh mục cha sẽ ảnh hưởng đến các danh mục con. Bạn vẫn muốn xóa?')"
-                                    style="width: 28px; height: 28px;">
-                                    <i class="fas fa-trash" style="font-size: 12px;"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
         </div>
     </div>
 
