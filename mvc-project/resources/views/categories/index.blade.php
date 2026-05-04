@@ -23,7 +23,7 @@
 
         <div class="panel" style="margin-bottom: 30px; border-top: 4px solid #319DFF;">
             <div class="panel-header">
-                <h2 class="panel-title" style="font-size: 16px;"> Danh mục cha (Dùng làm menu Header)</h2>
+                <h2 class="panel-title" style="font-size: 16px;"> Danh mục cha ({{ $parentCategories->count() }})</h2>
                 <button class="btn-primary-custom" onclick="openAddModal()">
                     <i class="fas fa-plus"></i> Thêm danh mục mới
                 </button>
@@ -63,7 +63,7 @@
 
         <div class="panel">
             <div class="panel-header">
-                <h2 class="panel-title">Danh sách danh mục con</h2>
+                <h2 class="panel-title">Danh sách danh mục con ({{ $categories->count() }})</h2>
             </div>
 
             <table class="dash-table">

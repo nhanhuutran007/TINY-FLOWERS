@@ -120,7 +120,7 @@
                 <div class="position-relative">
                     <button class="top-bar-items-2" type="button" id="topbar-notif">
                         <i class="fas fa-bell"></i>
-                        <span id="notif-badge" class="ellipse-2 d-none" style="display: flex; align-items: center; justify-content: center; font-size: 8px; color: white; font-weight: 800; width: 14px; height: 14px; top: 4px; right: 4px;"></span>
+                        <span id="notif-badge" class="ellipse-2 d-none" style="display: flex; align-items: center; justify-content: center; font-size: 8px; color: white; font-weight: 800; width: 14px; height: 14px; top: 0px; right: 0px; z-index: 10; position: absolute; background-color: red; border-radius: 50%;"></span>
                     </button>
                     <!-- Notification Panel -->
                     <div id="notif-panel" class="notif-panel d-none">

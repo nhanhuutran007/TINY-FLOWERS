@@ -113,15 +113,49 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Initial silent fetch
-    if (window.stockAlertsUrl) {
-        fetch(window.stockAlertsUrl)
-            .then(r => r.json())
+    const initStockFetch = () => {
+        const url = window.stockAlertsUrl || '/api/stock-alerts';
+        console.log('Fetching stock alerts from:', url);
+        
+        fetch(url)
+            .then(r => {
+                if (!r.ok) throw new Error('HTTP error ' + r.status);
+                return r.json();
+            })
             .then(data => {
+                console.log('Stock alerts data received:', data);
                 if (data.total > 0 && notifBadge) {
                     notifBadge.classList.remove('d-none');
                     notifBadge.innerText = data.total > 9 ? '9+' : data.total;
+                    notifBadge.style.display = 'flex'; // Force display
+                } else {
+                    if(notifBadge) {
+                        notifBadge.classList.add('d-none');
+                        notifBadge.style.display = 'none';
+                    }
+                }
+            })
+            .catch(err => {
+                console.error('Failed to init stock alerts:', err);
+                // Fallback to relative path if absolute failed
+                if (window.stockAlertsUrl && !window.stockAlertsUrl.includes('/api/stock-alerts')) {
+                     console.log('Retrying with relative path...');
+                     // Try a simpler relative path
+                     fetch('api/stock-alerts')
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data.total > 0 && notifBadge) {
+                                notifBadge.classList.remove('d-none');
+                                notifBadge.innerText = data.total > 9 ? '9+' : data.total;
+                                notifBadge.style.display = 'flex';
+                            }
+                        }).catch(e => console.error('Final fallback failed:', e));
                 }
             });
+    };
+
+    if (topbarNotif) {
+        initStockFetch();
     }
 
     // --- Global Search Suggestions ---

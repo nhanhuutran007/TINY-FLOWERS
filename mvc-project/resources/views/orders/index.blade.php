@@ -21,7 +21,7 @@
 
         <div class="panel">
             <div class="panel-header">
-                <h2 class="panel-title">Danh sách đơn hàng</h2>
+                <h2 class="panel-title">Danh sách đơn hàng ({{ $orders->count() }})</h2>
                 <div class="panel-actions">
                     <form action="{{ route('orders.index') }}" method="GET" style="display: flex; gap: 10px; align-items: center; margin-right: 10px;">
                         <input type="date" name="date_from" value="{{ $dateFrom ?? '' }}" class="form-control" style="padding: 6px 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px;">

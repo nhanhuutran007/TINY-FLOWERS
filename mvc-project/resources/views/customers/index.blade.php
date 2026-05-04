@@ -21,7 +21,7 @@
 
         <div class="panel">
             <div class="panel-header">
-                <h2 class="panel-title">Danh sách khách hàng đăng ký (Online)</h2>
+                <h2 class="panel-title">Danh sách khách hàng đăng ký (Online) ({{ $customers->count() }})</h2>
             </div>
 
             <table class="dash-table">
