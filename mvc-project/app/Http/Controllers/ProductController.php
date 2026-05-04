@@ -10,9 +10,19 @@ use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category')->latest()->get();
+        $query = Product::with('category')->latest();
+
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('barcode', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $products = $query->get();
         // Chỉ cho phép chọn danh mục con khi quản lý sản phẩm
         $categories = Category::where('type', 'child')->get();
         return view('products.index', compact('products', 'categories'));

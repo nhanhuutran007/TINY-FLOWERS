@@ -20,11 +20,51 @@
         @endif
 
         <div class="panel">
+            @php
+                $lowStockProducts = $products->filter(fn($p) => $p->stock_quantity > 0 && $p->stock_quantity < 10);
+                $outOfStockProducts = $products->filter(fn($p) => $p->stock_quantity <= 0);
+            @endphp
+
+            @if($lowStockProducts->count() > 0 || $outOfStockProducts->count() > 0)
+                <div style="margin-bottom: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    @if($outOfStockProducts->count() > 0)
+                    <div style="background: #fef2f2; border-left: 4px solid #ef4444; padding: 15px; border-radius: 8px;">
+                        <div style="color: #991b1b; font-weight: 700; margin-bottom: 5px;">
+                            <i class="fas fa-times-circle"></i> {{ $outOfStockProducts->count() }} sản phẩm hết hàng
+                        </div>
+                        <div style="font-size: 13px; color: #b91c1c;">Cần nhập thêm hàng ngay để không gián đoạn kinh doanh.</div>
+                    </div>
+                    @endif
+
+                    @if($lowStockProducts->count() > 0)
+                    <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 8px;">
+                        <div style="color: #92400e; font-weight: 700; margin-bottom: 5px;">
+                            <i class="fas fa-exclamation-triangle"></i> {{ $lowStockProducts->count() }} sản phẩm sắp hết
+                        </div>
+                        <div style="font-size: 13px; color: #b45309;">Số lượng còn dưới 10. Hãy cân nhắc nhập thêm hàng.</div>
+                    </div>
+                    @endif
+                </div>
+            @endif
+
             <div class="panel-header">
-                <h2 class="panel-title">Danh sách sản phẩm ({{ $products->count() }})</h2>
-                <button class="btn-primary-custom" onclick="openAddProductModal()">
-                    <i class="fas fa-plus"></i> Thêm sản phẩm
-                </button>
+                <h2 class="panel-title">
+                    @if(request('search'))
+                        Kết quả tìm kiếm cho: "{{ request('search') }}" ({{ $products->count() }})
+                    @else
+                        Danh sách sản phẩm ({{ $products->count() }})
+                    @endif
+                </h2>
+                <div style="display: flex; gap: 10px;">
+                    @if(request('search'))
+                        <a href="{{ route('products.index') }}" class="btn-secondary-custom" style="text-decoration: none; padding: 8px 15px; font-size: 13px;">
+                            <i class="fas fa-times"></i> Xóa tìm kiếm
+                        </a>
+                    @endif
+                    <button class="btn-primary-custom" onclick="openAddProductModal()">
+                        <i class="fas fa-plus"></i> Thêm sản phẩm
+                    </button>
+                </div>
             </div>
 
             <div style="overflow-x: auto;">
@@ -65,9 +105,20 @@
                                     <div style="font-weight: 600; color: #10B981;">{{ number_format($product->selling_price) }}đ</div>
                                 </td>
                                 <td>
-                                    <div style="font-weight: 600; {{ $product->stock_quantity < 10 ? 'color: #ef4444;' : 'color: #1e293b;' }}">
-                                        {{ $product->stock_quantity }}
-                                    </div>
+                                    @if($product->stock_quantity <= 0)
+                                        <div style="color: #ef4444; font-weight: 700;">
+                                            <span style="background: #fee2e2; padding: 2px 8px; border-radius: 4px; font-size: 11px; text-transform: uppercase;">Hết hàng</span>
+                                        </div>
+                                    @elseif($product->stock_quantity < 10)
+                                        <div style="color: #f59e0b; font-weight: 700;">
+                                            {{ $product->stock_quantity }}
+                                            <span style="background: #fffbeb; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 400; margin-left: 4px;">Sắp hết</span>
+                                        </div>
+                                    @else
+                                        <div style="font-weight: 600; color: #1e293b;">
+                                            {{ $product->stock_quantity }}
+                                        </div>
+                                    @endif
                                 </td>
                                 <td>
                                     @if($product->status)
