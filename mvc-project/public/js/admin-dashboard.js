@@ -53,7 +53,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const notifSummary = document.getElementById('notif-summary');
 
     function fetchStockAlerts() {
-        fetch('/api/stock-alerts')
+        const url = window.stockAlertsUrl || '/api/stock-alerts';
+        fetch(url)
             .then(response => response.json())
             .then(data => {
                 renderAlerts(data);
@@ -68,12 +69,18 @@ document.addEventListener('DOMContentLoaded', function () {
         
         if (data.total === 0) {
             notifList.innerHTML = '<div class="notif-loading text-success"><i class="fas fa-check-circle"></i> Mọi thứ đều ổn!</div>';
-            if(notifBadge) notifBadge.classList.add('d-none');
+            if(notifBadge) {
+                notifBadge.classList.add('d-none');
+                notifBadge.innerText = '';
+            }
             if(notifSummary) notifSummary.classList.add('d-none');
             return;
         }
 
-        if(notifBadge) notifBadge.classList.remove('d-none');
+        if(notifBadge) {
+            notifBadge.classList.remove('d-none');
+            notifBadge.innerText = data.total > 9 ? '9+' : data.total;
+        }
         if(notifSummary) {
             notifSummary.classList.remove('d-none');
             notifSummary.innerText = data.total + ' cảnh báo';
@@ -106,11 +113,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Initial silent fetch
-    fetch('/api/stock-alerts')
-        .then(r => r.json())
-        .then(data => {
-            if (data.total > 0 && notifBadge) notifBadge.classList.remove('d-none');
-        });
+    if (window.stockAlertsUrl) {
+        fetch(window.stockAlertsUrl)
+            .then(r => r.json())
+            .then(data => {
+                if (data.total > 0 && notifBadge) {
+                    notifBadge.classList.remove('d-none');
+                    notifBadge.innerText = data.total > 9 ? '9+' : data.total;
+                }
+            });
+    }
 
     // --- Global Search Suggestions ---
     if (topbarSearch) {

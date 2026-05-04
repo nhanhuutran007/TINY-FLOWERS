@@ -20,32 +20,6 @@
         @endif
 
         <div class="panel">
-            @php
-                $lowStockProducts = $products->filter(fn($p) => $p->stock_quantity > 0 && $p->stock_quantity < 10);
-                $outOfStockProducts = $products->filter(fn($p) => $p->stock_quantity <= 0);
-            @endphp
-
-            @if($lowStockProducts->count() > 0 || $outOfStockProducts->count() > 0)
-                <div style="margin-bottom: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    @if($outOfStockProducts->count() > 0)
-                    <div style="background: #fef2f2; border-left: 4px solid #ef4444; padding: 15px; border-radius: 8px;">
-                        <div style="color: #991b1b; font-weight: 700; margin-bottom: 5px;">
-                            <i class="fas fa-times-circle"></i> {{ $outOfStockProducts->count() }} sản phẩm hết hàng
-                        </div>
-                        <div style="font-size: 13px; color: #b91c1c;">Cần nhập thêm hàng ngay để không gián đoạn kinh doanh.</div>
-                    </div>
-                    @endif
-
-                    @if($lowStockProducts->count() > 0)
-                    <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 8px;">
-                        <div style="color: #92400e; font-weight: 700; margin-bottom: 5px;">
-                            <i class="fas fa-exclamation-triangle"></i> {{ $lowStockProducts->count() }} sản phẩm sắp hết
-                        </div>
-                        <div style="font-size: 13px; color: #b45309;">Số lượng còn dưới 10. Hãy cân nhắc nhập thêm hàng.</div>
-                    </div>
-                    @endif
-                </div>
-            @endif
 
             <div class="panel-header">
                 <h2 class="panel-title">
