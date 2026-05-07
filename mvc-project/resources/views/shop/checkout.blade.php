@@ -303,6 +303,7 @@
         .review-data { font-size: 15px; color: var(--text); line-height: 1.6; }
         .review-data p { margin: 4px 0; }
     </style>
+    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
 </head>
 <body>
 
@@ -852,5 +853,6 @@
             document.getElementById('summary-total').innerText = total.toLocaleString('vi-VN') + 'đ';
         });
     </script>
+    @include('partials.chatbot')
 </body>
 </html>

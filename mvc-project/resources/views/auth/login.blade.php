@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="{{ asset('images/favicon.svg') }}">
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
 </head>
 <body class="auth-body">
     <!-- Logo -->
@@ -110,6 +112,13 @@
         </div>
     </div>
     
+    <script>
+        window.TF_CONFIG = {
+            csrfToken: '{{ csrf_token() }}',
+            chatbotChatUrl: '{{ route('chatbot.chat') }}'
+        };
+    </script>
+    @include('partials.chatbot')
     <script src="{{ asset('js/auth.js') }}"></script>
 </body>
 </html>

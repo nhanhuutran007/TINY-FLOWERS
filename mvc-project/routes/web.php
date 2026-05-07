@@ -18,6 +18,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\GoogleAuthController;
+use App\Http\Controllers\ChatbotController;
 
 // Tất cả các route đều được bao bọc trong middleware 'web' để chia sẻ Session
 Route::middleware(['web'])->group(function () {
@@ -160,6 +161,7 @@ Route::middleware(['web'])->group(function () {
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/export-pdf', [ReportController::class, 'exportPdf'])->name('reports.exportPdf');
     Route::get('/api/stock-alerts', [InventoryController::class, 'stockAlerts'])->name('api.stock-alerts');
+    Route::post('/chatbot/chat', [ChatbotController::class, 'chat'])->name('chatbot.chat');
 });
 
 // PASSWORD RECOVERY (OUTSIDE GROUP IF NEEDED, BUT USUALLY INSIDE)

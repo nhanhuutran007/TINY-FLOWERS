@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}?v={{ time() }}">
     <link rel="stylesheet" href="{{ asset('css/new-sidebar.css') }}?v={{ time() }}">
     <link rel="stylesheet" href="{{ asset('css/new-topbar.css') }}?v={{ time() }}">
+    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
     @yield('styles')
 </head>
 
@@ -173,6 +174,8 @@
 
         @yield('content')
     </div>
+
+    @include('partials.chatbot')
 
     @yield('scripts')
     <script>

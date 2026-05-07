@@ -6,6 +6,8 @@
     <title>Đặt hàng thành công - Tiny Flowers</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('images/favicon.svg') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}">
     <style>
         body { font-family: 'Inter', sans-serif; background: #f8fafc; margin: 0; color: #0f172a; display: flex; flex-direction: column; min-height: 100vh; }
         .checkout-header { background: white; padding: 20px 5%; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center;}
@@ -71,5 +73,6 @@
         // Clear the cart since the order was successful
         localStorage.removeItem('tiny_flowers_cart');
     </script>
+    @include('partials.chatbot')
 </body>
 </html>

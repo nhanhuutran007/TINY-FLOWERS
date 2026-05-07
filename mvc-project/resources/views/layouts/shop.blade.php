@@ -227,50 +227,16 @@
         </div>
     </div>
 
-    <!-- Chatbot Assistant -->
-    <div id="chatbot-launcher">
-        TF
-    </div>
-
-    <div id="chatbot-window">
-        <div class="chatbot-header">
-            <div class="chatbot-header-info">
-                <div class="chatbot-avatar">TF</div>
-                <div class="chatbot-name">
-                    <h4>TF Assistant</h4>
-                    <span>Trực tuyến</span>
-                </div>
-            </div>
-            <div class="chatbot-close">
-                <i class="fas fa-times"></i>
-            </div>
-        </div>
-
-        <div id="chatbot-content">
-            <div class="message bot">
-                Chào mừng bạn đến với TINY FLOWERS! Tôi có thể giúp gì cho bạn?
-            </div>
-            <div class="typing" id="chatbot-typing">
-                <span></span><span></span><span></span>
-            </div>
-        </div>
-
-        <div class="chatbot-options" id="chatbot-options">
-            <button class="option-btn" data-question="Sản phẩm còn hàng không?" data-answer="Tất cả sản phẩm hiển thị trên website đều đang có sẵn tại kho bạn nhé. Bạn có thể đặt mua ngay!">Sản phẩm còn hàng không?</button>
-            <button class="option-btn" data-question="Thời gian giao hàng bao lâu?" data-answer="Shop hỗ trợ giao hàng toàn quốc với thời gian từ 2-4 ngày làm việc tùy khu vực ạ.">Thời gian giao hàng bao lâu?</button>
-            <button class="option-btn" data-question="Chính sách đổi trả thế nào?" data-answer="Bạn có thể đổi trả sản phẩm trong vòng 7 ngày nếu còn nguyên tem mác và chưa qua sử dụng ạ.">Chính sách đổi trả thế nào?</button>
-        </div>
-    </div>
-
     <script>
         window.TF_CONFIG = {
             favoritesToggleUrl: '{{ route('favorites.toggle') }}',
             csrfToken: '{{ csrf_token() }}',
-            loginUrl: '{{ route('login') }}'
+            loginUrl: '{{ route('login') }}',
+            chatbotChatUrl: '{{ route('chatbot.chat') }}'
         };
     </script>
     <script src="{{ asset('js/cart.js') }}"></script>
-    <script src="{{ asset('js/chatbot.js') }}"></script>
+    @include('partials.chatbot')
     <script src="{{ asset('js/shop-init.js') }}"></script>
     @yield('scripts')
 </body>
