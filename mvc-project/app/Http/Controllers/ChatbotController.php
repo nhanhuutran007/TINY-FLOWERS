@@ -16,7 +16,7 @@ class ChatbotController extends Controller
             return response()->json(['error' => 'No message provided'], 400);
         }
 
-        $apiKey = env('OPENROUTER_API_KEY');
+        $apiKey = config('services.openrouter.api_key');
         if (!$apiKey) {
             return response()->json(['error' => 'OpenRouter API key not configured'], 500);
         }
