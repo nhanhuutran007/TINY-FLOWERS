@@ -351,7 +351,7 @@
                 </div>
                 <div style="height: 20px; width: 1px; background: #e2e8f0;"></div>
                 <div style="color: #64748b; font-size: 14px;">
-                    Trạng thái: <span style="color: #22c55e; font-weight: 700;">{{ $product->stock_quantity > 0 ? 'Còn hàng' : 'Hết hàng' }}</span>
+                    Trạng thái: <span style="color: {{ $product->stock_quantity > 0 ? '#22c55e' : '#ef4444' }}; font-weight: 700;">{{ $product->stock_quantity > 0 ? 'Còn hàng' : 'Hết hàng' }}</span>
                 </div>
             </div>
 
@@ -370,9 +370,9 @@
                         <input type="number" name="quantity" id="qty" value="1" min="1" max="{{ $product->stock_quantity }}" class="qty-input">
                         <button type="button" class="qty-btn-circle" onclick="increaseQty()"><i class="fas fa-plus"></i></button>
                     </div>
-                    <button type="submit" class="add-to-cart-large">
-                        <i class="fas fa-shopping-bag"></i>
-                        THÊM VÀO GIỎ HÀNG
+                    <button type="submit" class="add-to-cart-large" {{ $product->stock_quantity <= 0 ? 'disabled' : '' }} style="{{ $product->stock_quantity <= 0 ? 'background: #94a3b8; cursor: not-allowed; box-shadow: none;' : '' }}">
+                        <i class="fas {{ $product->stock_quantity > 0 ? 'fa-shopping-bag' : 'fa-times-circle' }}"></i>
+                        {{ $product->stock_quantity > 0 ? 'THÊM VÀO GIỎ HÀNG' : 'HẾT HÀNG' }}
                     </button>
                     <button type="button" class="wishlist-btn-large {{ in_array($product->id, $userFavoriteIds) ? 'active' : '' }}" onclick="toggleFavorite({{ $product->id }}, this)">
                         <i class="{{ in_array($product->id, $userFavoriteIds) ? 'fas' : 'far' }} fa-heart"></i>

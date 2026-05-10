@@ -162,6 +162,7 @@ Route::middleware(['web'])->group(function () {
     Route::get('/reports/export-pdf', [ReportController::class, 'exportPdf'])->name('reports.exportPdf');
     Route::get('/api/stock-alerts', [InventoryController::class, 'stockAlerts'])->name('api.stock-alerts');
     Route::post('/chatbot/chat', [ChatbotController::class, 'chat'])->name('chatbot.chat');
+    Route::post('/admin-chatbot/chat', [ChatbotController::class, 'adminChat'])->name('admin-chatbot.chat');
 });
 
 // PASSWORD RECOVERY (OUTSIDE GROUP IF NEEDED, BUT USUALLY INSIDE)

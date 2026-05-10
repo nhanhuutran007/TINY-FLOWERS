@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}?v={{ time() }}">
     <link rel="stylesheet" href="{{ asset('css/new-sidebar.css') }}?v={{ time() }}">
     <link rel="stylesheet" href="{{ asset('css/new-topbar.css') }}?v={{ time() }}">
+    <link rel="stylesheet" href="{{ asset('css/admin-chatbot.css') }}?v={{ time() }}">
     @yield('styles')
 </head>
 
@@ -190,6 +191,7 @@
             { title: 'Cài đặt hệ thống', route: '#', icon: 'fa-cog' },
         ];
     </script>
+    @include('partials.admin-chatbot')
     <script src="{{ asset('js/admin-dashboard.js') }}"></script>
 </body>
 

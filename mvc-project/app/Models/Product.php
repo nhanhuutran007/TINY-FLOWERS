@@ -11,6 +11,18 @@ class Product extends Model
         'selling_price', 'material', 'image', 'stock_quantity', 'status'
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($product) {
+            // Automatically set status to 0 (Stopped Selling) if stock is 0 or less
+            if ($product->stock_quantity <= 0) {
+                $product->status = 0;
+            }
+        });
+    }
+
     public function category()
     {
         return $this->belongsTo(Category::class);
