@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Tiny Flowers - Fashion & Streetwear')</title>
     <link rel="icon" type="image/svg+xml" href="{{ asset('images/favicon.svg') }}">
-    <link rel="stylesheet" href="{{ asset('css/welcome.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/welcome.css') }}?v=1.2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/user-dropdown.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}?v=1.1">
+    <link rel="stylesheet" href="{{ asset('css/user-dropdown.css') }}?v=1.2">
+    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}?v=1.2">
     @yield('styles')
 </head>
 <body>
@@ -235,9 +235,9 @@
             chatbotChatUrl: '{{ route('chatbot.chat') }}'
         };
     </script>
-    <script src="{{ asset('js/cart.js') }}"></script>
+    <script src="{{ asset('js/cart.js') }}?v=1.2"></script>
     @include('partials.chatbot')
-    <script src="{{ asset('js/shop-init.js') }}"></script>
+    <script src="{{ asset('js/shop-init.js') }}?v=1.2"></script>
     @yield('scripts')
 </body>
 </html>

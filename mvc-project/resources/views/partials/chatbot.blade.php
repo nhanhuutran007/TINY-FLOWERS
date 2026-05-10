@@ -47,4 +47,4 @@
     window.TF_CONFIG.chatbotChatUrl = '{{ route('chatbot.chat') }}';
     window.TF_CONFIG.csrfToken = '{{ csrf_token() }}';
 </script>
-<script src="{{ asset('js/chatbot.js') }}?v=1.1"></script>
+<script src="{{ asset('js/chatbot.js') }}?v=1.2"></script>
