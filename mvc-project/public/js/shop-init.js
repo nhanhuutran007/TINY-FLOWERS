@@ -29,11 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if(e) e.preventDefault();
         if(sidebar) sidebar.classList.add('active');
         if(overlay) overlay.classList.add('active');
+        document.body.classList.add('cart-open');
     };
 
     const closeCart = () => {
         if(sidebar) sidebar.classList.remove('active');
         if(overlay) overlay.classList.remove('active');
+        document.body.classList.remove('cart-open');
     };
 
     if(cartBtn) cartBtn.addEventListener('click', openCart);

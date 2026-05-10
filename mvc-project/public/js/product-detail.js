@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const overlay = document.querySelector('.cart-overlay');
                 if (sidebar) sidebar.classList.add('active');
                 if (overlay) overlay.classList.add('active');
+                document.body.classList.add('cart-open');
 
                 // Visual feedback on button
                 const btn = form.querySelector('button[type="submit"]');

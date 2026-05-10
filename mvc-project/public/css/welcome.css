@@ -743,8 +743,7 @@ body {
 }
 
 .video-lookbook-section .slider-track {
-    justify-content: center; /* Center videos ONLY in lookbook */
-    width: 100%;
+    /* Removed justify-content: center and width: 100% to allow infinite JS animation */
 }
 
 .slider-item {
@@ -842,4 +841,68 @@ body {
 
 .product-rating i {
     font-size: 12px;
+}
+
+/* Responsive Header & Layout Fixes */
+@media (max-width: 1100px) {
+    .main-nav {
+        gap: 15px;
+    }
+    .brand-name {
+        font-size: 20px;
+    }
+    .search-bar {
+        width: 180px;
+    }
+}
+
+@media (max-width: 992px) {
+    .main-nav {
+        display: none; /* Hide nav links on smaller tablets/mobile */
+    }
+    .header-container {
+        padding: 0 20px;
+    }
+    .search-bar {
+        width: 150px;
+    }
+}
+
+@media (max-width: 600px) {
+    .brand-name {
+        display: none; /* Show only TF logo on mobile */
+    }
+    .search-bar {
+        width: 120px;
+    }
+    .header-actions {
+        gap: 10px;
+    }
+    .auth-link span {
+        display: none; /* Hide 'ĐĂNG NHẬP' text, show only icon */
+    }
+}
+
+/* Fix sticky header occlusion for anchor links */
+section[id] {
+    scroll-margin-top: 100px;
+}
+
+/* Add subtle scrollbar for sliders on desktop to indicate scrollability */
+@media (hover: hover) {
+    .slider-container {
+        scrollbar-width: thin;
+        scrollbar-color: var(--border-warm) transparent;
+    }
+    .slider-container::-webkit-scrollbar {
+        display: block;
+        height: 4px;
+    }
+    .slider-container::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .slider-container::-webkit-scrollbar-thumb {
+        background-color: var(--border-warm);
+        border-radius: 10px;
+    }
 }

@@ -372,3 +372,12 @@
     color: #319DFF;
     font-weight: 700;
 }
+
+/* Hide chatbot when cart is open to avoid overlap */
+body.cart-open #chatbot-launcher,
+body.cart-open #chatbot-window {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translateY(20px) scale(0.9) !important;
+}

@@ -55,6 +55,7 @@ function addToCart(id, name, price, image) {
     const overlay = document.querySelector('.cart-overlay');
     if(sidebar) sidebar.classList.add('active');
     if(overlay) overlay.classList.add('active');
+    document.body.classList.add('cart-open');
 }
 
 window.updateQty = function(index, change) {

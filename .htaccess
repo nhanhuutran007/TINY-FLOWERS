@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # 1. Map assets directly to the mvc-project/public folder
+    # This covers CSS, JS, images, fonts, etc.
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(css|js|images|fonts|favicons|storage|uploads)/(.*)$ mvc-project/public/$1/$2 [L,NC]
+
+    # 2. Redirect all other requests to index.php (the root one)
+    # The root index.php already handles loading the Laravel app.
+    # This allows for clean URLs like /TINY-FLOWERS/login instead of /TINY-FLOWERS/index.php/login
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [L]
+</IfModule>
