@@ -159,9 +159,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // --- Global Search Suggestions ---
+    let currentFocus = -1;
+
     if (topbarSearch) {
         topbarSearch.addEventListener('input', function () {
             const query = this.value.toLowerCase().trim();
+            currentFocus = -1;
+            
             if (query.length === 0) {
                 if(searchSuggestions) searchSuggestions.classList.add('d-none');
                 return;
@@ -169,23 +173,62 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (!window.ADMIN_FEATURES) return;
 
-            const filtered = window.ADMIN_FEATURES.filter(f => f.title.toLowerCase().includes(query));
+            const filtered = window.ADMIN_FEATURES.filter(f => 
+                f.title.toLowerCase().includes(query) || 
+                f.route.toLowerCase().includes(query)
+            );
             renderSearchSuggestions(filtered);
         });
+
+        topbarSearch.addEventListener('keydown', function(e) {
+            let x = document.querySelectorAll('.search-item');
+            if (e.keyCode == 40) { // Arrow Down
+                currentFocus++;
+                addActive(x);
+            } else if (e.keyCode == 38) { // Arrow Up
+                currentFocus--;
+                addActive(x);
+            } else if (e.keyCode == 13) { // Enter
+                e.preventDefault();
+                if (currentFocus > -1) {
+                    if (x) x[currentFocus].click();
+                } else if (x.length > 0) {
+                    x[0].click();
+                }
+            }
+        });
+    }
+
+    function addActive(x) {
+        if (!x) return false;
+        removeActive(x);
+        if (currentFocus >= x.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (x.length - 1);
+        x[currentFocus].classList.add('active');
+        x[currentFocus].scrollIntoView({ block: 'nearest' });
+    }
+
+    function removeActive(x) {
+        for (let i = 0; i < x.length; i++) {
+            x[i].classList.remove('active');
+        }
     }
 
     function renderSearchSuggestions(items) {
         if (!searchSuggestions) return;
         
         if (items.length === 0) {
-            searchSuggestions.innerHTML = '<div class="search-no-result">Không tìm thấy chức năng này</div>';
+            searchSuggestions.innerHTML = '<div class="search-no-result"><i class="fas fa-search"></i> Không tìm thấy chức năng này</div>';
         } else {
             let html = '';
-            items.forEach(item => {
+            items.forEach((item, index) => {
                 html += `
-                    <a href="${item.route}" class="search-item">
-                        <i class="fas ${item.icon}"></i>
-                        <span>${item.title}</span>
+                    <a href="${item.route}" class="search-item" data-index="${index}">
+                        <div class="search-item-icon"><i class="fas ${item.icon}"></i></div>
+                        <div class="search-item-info">
+                            <span class="search-item-title">${item.title}</span>
+                            <span class="search-item-route">${item.route.split('/').pop() || 'Trang chủ'}</span>
+                        </div>
                     </a>
                 `;
             });

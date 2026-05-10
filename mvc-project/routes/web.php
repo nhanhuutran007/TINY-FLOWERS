@@ -158,6 +158,8 @@ Route::middleware(['web'])->group(function () {
     Route::post('/customers/{id}/toggle-status', [CustomerController::class, 'toggleStatus'])->name('customers.toggle-status');
     Route::resource('users', UserController::class);
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    Route::get('/inventory/stock-entry', [InventoryController::class, 'stockEntry'])->name('inventory.stock-entry');
+    Route::post('/inventory/stock-entry', [InventoryController::class, 'storeStockEntry'])->name('inventory.store-stock-entry');
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/export-pdf', [ReportController::class, 'exportPdf'])->name('reports.exportPdf');
     Route::get('/api/stock-alerts', [InventoryController::class, 'stockAlerts'])->name('api.stock-alerts');

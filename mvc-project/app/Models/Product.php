@@ -11,6 +11,8 @@ class Product extends Model
         'selling_price', 'material', 'image', 'stock_quantity', 'status'
     ];
 
+    protected $appends = ['image_url'];
+
     protected static function boot()
     {
         parent::boot();

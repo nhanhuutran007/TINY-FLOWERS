@@ -78,6 +78,14 @@
                 </a>
             </div>
 
+            <div class="menu-item-wrap">
+                <a href="{{ route('inventory.stock-entry') }}"
+                    class="{{ request()->routeIs('inventory.stock-entry') ? 'menu-btn-active' : 'menu-btn' }}" id="nav-stock-entry">
+                    <span class="nav-icon"><i class="fas fa-file-import"></i></span>
+                    <span class="nav-label">Nhập kho</span>
+                </a>
+            </div>
+
             @if(Auth::user()->role !== 'admin')
             <div class="menu-item-wrap">
                 <a href="{{ route('profile.orders') }}"
@@ -186,9 +194,11 @@
             { title: 'Quản lý Đơn hàng', route: '{{ route("orders.index") }}', icon: 'fa-shopping-cart' },
             { title: 'Quản lý Khách hàng', route: '{{ route("customers.index") }}', icon: 'fa-users' },
             { title: 'Báo cáo Doanh thu', route: '{{ route("reports.index") }}', icon: 'fa-chart-line' },
+            { title: 'Nhập kho sản phẩm', route: '{{ route("inventory.stock-entry") }}', icon: 'fa-file-import' },
             { title: 'Hồ sơ cá nhân', route: '{{ route("profile.index") }}', icon: 'fa-user-circle' },
             { title: 'Đổi mật khẩu', route: '{{ route("profile.password") }}', icon: 'fa-key' },
             { title: 'Cài đặt hệ thống', route: '#', icon: 'fa-cog' },
+            { title: 'Đăng xuất tài khoản', route: '{{ route("logout") }}', icon: 'fa-sign-out-alt' },
         ];
     </script>
     @include('partials.admin-chatbot')
