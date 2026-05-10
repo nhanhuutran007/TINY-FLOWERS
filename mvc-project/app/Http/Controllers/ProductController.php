@@ -38,6 +38,7 @@ class ProductController extends Controller
             'cost_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
+            'sizes' => 'nullable|array',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ], [
             'category_id.exists' => 'Danh mục đã chọn phải là danh mục con.'
@@ -46,6 +47,7 @@ class ProductController extends Controller
         try {
             $data = $request->all();
             $data['status'] = $request->has('status') ? 1 : 0;
+            $data['sizes'] = $request->has('sizes') ? implode(',', $request->input('sizes')) : null;
 
             if ($request->hasFile('image')) {
                 $file = $request->file('image');
@@ -80,6 +82,7 @@ class ProductController extends Controller
             'cost_price' => 'required|numeric|min:0',
             'selling_price' => 'required|numeric|min:0',
             'stock_quantity' => 'required|integer|min:0',
+            'sizes' => 'nullable|array',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ], [
             'category_id.exists' => 'Danh mục đã chọn phải là danh mục con.'
@@ -88,6 +91,7 @@ class ProductController extends Controller
         try {
             $data = $request->all();
             $data['status'] = $request->has('status') ? 1 : 0;
+            $data['sizes'] = $request->has('sizes') ? implode(',', $request->input('sizes')) : null;
 
             if ($request->hasFile('image')) {
                 $file = $request->file('image');

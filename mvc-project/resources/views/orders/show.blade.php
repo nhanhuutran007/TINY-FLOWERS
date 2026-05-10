@@ -107,6 +107,7 @@
                     <tr>
                         <th>Sản phẩm</th>
                         <th>Đơn giá</th>
+                        <th style="text-align: center;">Size</th>
                         <th style="text-align: center;">Số lượng</th>
                         <th style="text-align: right;">Thành tiền</th>
                     </tr>
@@ -119,6 +120,13 @@
                                 <div style="font-size: 12px; color: #64748b;">Mã SP: {{ $item->product->barcode ?? 'N/A' }}</div>
                             </td>
                             <td>{{ number_format($item->selling_price) }}đ</td>
+                            <td style="text-align: center;">
+                                @if($item->size)
+                                    <span style="background: #eef2ff; color: #4f46e5; border: 1px solid #c7d2fe; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 700;">{{ $item->size }}</span>
+                                @else
+                                    <span style="color: #94a3b8; font-size: 12px;">N/A</span>
+                                @endif
+                            </td>
                             <td style="text-align: center;">{{ $item->quantity }}</td>
                             <td style="text-align: right; font-weight: 600;">{{ number_format($item->subtotal) }}đ</td>
                         </tr>
@@ -126,15 +134,15 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="3" style="text-align: right; padding: 15px; font-weight: 600; color: #64748b;">Tổng phụ:</td>
+                        <td colspan="4" style="text-align: right; padding: 15px; font-weight: 600; color: #64748b;">Tổng phụ:</td>
                         <td style="text-align: right; padding: 15px; font-weight: 600;">{{ number_format($order->subtotal) }}đ</td>
                     </tr>
                     <tr>
-                        <td colspan="3" style="text-align: right; padding: 15px; font-weight: 600; color: #64748b;">Giảm giá:</td>
+                        <td colspan="4" style="text-align: right; padding: 15px; font-weight: 600; color: #64748b;">Giảm giá:</td>
                         <td style="text-align: right; padding: 15px; font-weight: 600; color: #ef4444;">-{{ number_format($order->discount) }}đ</td>
                     </tr>
                     <tr style="background: #f8fafc;">
-                        <td colspan="3" style="text-align: right; padding: 20px; font-weight: 800; font-size: 18px; color: #1e293b;">TỔNG THANH TOÁN:</td>
+                        <td colspan="4" style="text-align: right; padding: 20px; font-weight: 800; font-size: 18px; color: #1e293b;">TỔNG THANH TOÁN:</td>
                         <td style="text-align: right; padding: 20px; font-weight: 800; font-size: 18px; color: #319DFF;">{{ number_format($order->total_amount) }}đ</td>
                     </tr>
                 </tfoot>

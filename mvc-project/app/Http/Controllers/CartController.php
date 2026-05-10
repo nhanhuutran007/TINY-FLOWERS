@@ -21,7 +21,8 @@ class CartController extends Controller
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1'
+            'quantity' => 'required|integer|min:1',
+            'size' => 'nullable|string'
         ]);
 
         $product = Product::findOrFail($request->product_id);
@@ -31,15 +32,18 @@ class CartController extends Controller
         }
 
         $cart = session()->get('cart', []);
+        $cartKey = $product->id . ($request->size ? '-' . $request->size : '');
 
-        if (isset($cart[$product->id])) {
-            $cart[$product->id]['quantity'] += $request->quantity;
+        if (isset($cart[$cartKey])) {
+            $cart[$cartKey]['quantity'] += $request->quantity;
         } else {
-            $cart[$product->id] = [
+            $cart[$cartKey] = [
+                'id' => $product->id,
                 'name' => $product->name,
                 'quantity' => $request->quantity,
                 'price' => $product->selling_price,
                 'image' => $product->image_url,
+                'size' => $request->size,
                 'max_quantity' => $product->stock_quantity
             ];
         }

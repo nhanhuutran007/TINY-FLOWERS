@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!window.PRODUCT_DATA) return;
 
             const qty = parseInt(document.getElementById('qty').value) || 1;
+            const sizeInput = form.querySelector('input[name="size"]:checked');
+            const size = sizeInput ? sizeInput.value : null;
+
             const id = window.PRODUCT_DATA.id;
             const name = window.PRODUCT_DATA.name;
             const price = window.PRODUCT_DATA.price;
@@ -14,11 +17,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Use the global cart array from the layout
             if (typeof cart !== 'undefined') {
-                const existing = cart.find(item => item.id == id);
+                // Find existing item with SAME ID AND SAME SIZE
+                const existing = cart.find(item => item.id == id && item.size == size);
                 if (existing) {
                     existing.quantity += qty;
                 } else {
-                    cart.push({ id, name, price, image, quantity: qty });
+                    cart.push({ id, name, price, image, quantity: qty, size: size });
                 }
                 if (typeof updateCartUI === 'function') {
                     updateCartUI();

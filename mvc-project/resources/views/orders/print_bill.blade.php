@@ -211,7 +211,7 @@
         <td class="text-center">{{ $index + 1 }}</td>
         <td>
           <strong>{{ $item->product_name }}</strong><br>
-          <span style="font-size:11px; color:#666">Mã: {{ $item->product->barcode ?? 'N/A' }}</span>
+          <span style="font-size:11px; color:#666">Mã: {{ $item->product->barcode ?? 'N/A' }} {{ $item->size ? '| Size: ' . $item->size : '' }}</span>
         </td>
         <td class="text-center">{{ $item->quantity }}</td>
         <td class="text-right">{{ number_format($item->selling_price) }}đ</td>

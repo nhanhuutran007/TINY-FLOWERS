@@ -128,7 +128,12 @@
                     <td>
                         <div class="product-info-cell">
                             <img src="{{ $item->product->image_url }}" class="product-img">
-                            <span class="product-name">{{ $item->product_name }}</span>
+                            <div>
+                                <span class="product-name">{{ $item->product_name }}</span>
+                                @if($item->size)
+                                    <div style="font-size: 11px; color: #64748b; margin-top: 4px; font-weight: 700;">SIZE: {{ $item->size }}</div>
+                                @endif
+                            </div>
                         </div>
                     </td>
                     <td>{{ number_format($item->selling_price) }}đ</td>

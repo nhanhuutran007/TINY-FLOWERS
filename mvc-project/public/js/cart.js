@@ -23,6 +23,7 @@ function updateCartUI() {
                         <img src="${item.image}" class="cart-item-img" alt="${item.name}">
                         <div class="cart-item-info">
                             <div class="cart-item-name">${item.name}</div>
+                            ${item.size ? `<div style="font-size: 11px; color: #64748b; font-weight: 600; margin-bottom: 4px;">SIZE: ${item.size}</div>` : ''}
                             <div class="cart-item-price">${new Intl.NumberFormat('vi-VN').format(item.price)}đ</div>
                             <div class="cart-item-actions">
                                 <div class="qty-wrapper">
@@ -43,12 +44,12 @@ function updateCartUI() {
     localStorage.setItem('tiny_flowers_cart', JSON.stringify(cart));
 }
 
-function addToCart(id, name, price, image) {
-    const existing = cart.find(item => item.id == id);
+function addToCart(id, name, price, image, size = null) {
+    const existing = cart.find(item => item.id == id && item.size == size);
     if (existing) {
         existing.quantity += 1;
     } else {
-        cart.push({ id, name, price, image, quantity: 1 });
+        cart.push({ id, name, price, image, quantity: 1, size: size });
     }
     updateCartUI();
     const sidebar = document.querySelector('.cart-sidebar');

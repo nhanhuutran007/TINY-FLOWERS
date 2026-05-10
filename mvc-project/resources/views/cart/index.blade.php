@@ -83,11 +83,14 @@
                 <div class="cart-items">
                     @foreach($cart as $id => $item)
                         <div class="cart-item">
-                            <a href="{{ route('shop.show', $id) }}">
+                            <a href="{{ route('shop.show', $item['id'] ?? $id) }}">
                                 <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}" class="cart-item-img">
                             </a>
                             <div class="cart-item-details">
-                                <a href="{{ route('shop.show', $id) }}" class="cart-item-name">{{ $item['name'] }}</a>
+                                <a href="{{ route('shop.show', $item['id'] ?? $id) }}" class="cart-item-name">{{ $item['name'] }}</a>
+                                @if(isset($item['size']) && $item['size'])
+                                    <div style="font-size: 12px; color: #64748b; margin-bottom: 5px;">Size: <span style="font-weight: 700; color: #0f172a;">{{ $item['size'] }}</span></div>
+                                @endif
                                 <div class="cart-item-price">{{ number_format($item['price'], 0, ',', '.') }}đ</div>
                             </div>
                             <form action="{{ route('cart.update') }}" method="POST" style="margin: 0;">

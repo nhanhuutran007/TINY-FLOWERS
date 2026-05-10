@@ -54,7 +54,7 @@
             </div>
             <div class="info-row">
                 <span class="info-label">Khách hàng:</span>
-                <span class="info-value">{{ $order->customer->name }}</span>
+                <span class="info-value">{{ $order->customer->name ?? 'Khách hàng' }}</span>
             </div>
             <div class="info-row">
                 <span class="info-label">Tổng thanh toán:</span>

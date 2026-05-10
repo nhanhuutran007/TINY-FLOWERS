@@ -207,6 +207,62 @@
         border-color: #ef4444;
     }
 
+    /* Size Selector Styling */
+    .size-selector-wrapper {
+        margin-bottom: 30px;
+    }
+    .size-label {
+        font-size: 14px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 12px;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .size-options {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .size-option {
+        position: relative;
+    }
+    .size-option input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+    .size-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 54px;
+        height: 54px;
+        padding: 0 15px;
+        border: 2px solid #f1f5f9;
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: 15px;
+        color: #475569;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        background: white;
+    }
+    .size-option input:checked + .size-box {
+        background: #0f172a;
+        color: white;
+        border-color: #0f172a;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
+    }
+    .size-box:hover {
+        border-color: #cbd5e1;
+    }
+    .size-option input:focus + .size-box {
+        box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
+    }
+
     .delivery-info-card {
         background: #f8fafc;
         border-radius: 20px;
@@ -364,6 +420,21 @@
             <form id="add-to-cart-form" action="{{ route('cart.add') }}" method="POST">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product->id }}">
+                
+                @if($product->sizes)
+                <div class="size-selector-wrapper">
+                    <span class="size-label">Chọn Kích Cỡ:</span>
+                    <div class="size-options">
+                        @foreach($product->sizes_array as $index => $sz)
+                            <label class="size-option">
+                                <input type="radio" name="size" value="{{ $sz }}" {{ $index === 0 ? 'checked' : '' }} required>
+                                <span class="size-box">{{ $sz }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
                 <div class="action-group">
                     <div class="qty-control">
                         <button type="button" class="qty-btn-circle" onclick="decreaseQty()"><i class="fas fa-minus"></i></button>

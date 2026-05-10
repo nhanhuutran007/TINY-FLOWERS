@@ -192,6 +192,7 @@ class ShopController extends Controller
                     $orderItem->selling_price = $item['price'];
                     $orderItem->quantity = $item['quantity'];
                     $orderItem->subtotal = $item['price'] * $item['quantity'];
+                    $orderItem->size = $item['size'] ?? null;
                     $orderItem->save();
                     
                     $product->stock_quantity -= $item['quantity'];
@@ -223,7 +224,7 @@ class ShopController extends Controller
 
     public function checkoutSuccess($orderNumber)
     {
-        $order = Order::where('order_number', $orderNumber)->with('items')->firstOrFail();
+        $order = Order::where('order_number', $orderNumber)->with(['items', 'customer'])->firstOrFail();
         $title = 'Đặt hàng thành công';
         return view('shop.checkout-success', compact('order', 'title'));
     }

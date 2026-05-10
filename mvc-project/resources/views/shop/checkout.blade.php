@@ -836,9 +836,10 @@
                         <img src="${item.image}" alt="${item.name}" class="summary-img" onerror="this.src='{{ asset('images/default-product.png') }}'">
                         <div class="summary-info">
                             <h3 class="summary-name">${item.name}</h3>
+                            ${item.size ? `<p style="font-size: 11px; color: #64748b; margin: 0 0 4px 0; font-weight: 600;">SIZE: ${item.size}</p>` : ''}
                             <span class="summary-price">${(item.price).toLocaleString('vi-VN')}đ</span>
                         </div>
-                        <div class="summary-qty">${item.quantity} x ${(item.price).toLocaleString('vi-VN')}đ</div>
+                        <div class="summary-qty">x${item.quantity}</div>
                     </div>
                 `;
             });

@@ -127,7 +127,12 @@
                                                 <tbody>
                                                     @foreach($order->items as $item)
                                                     <tr>
-                                                        <td><strong>{{ $item->product_name }}</strong></td>
+                                                        <td>
+                                                            <strong>{{ $item->product_name }}</strong>
+                                                            @if($item->size)
+                                                                <div style="font-size: 11px; color: #64748B; margin-top: 2px;">Size: {{ $item->size }}</div>
+                                                            @endif
+                                                        </td>
                                                         <td style="text-align: center;">{{ $item->quantity }}</td>
                                                         <td style="text-align: right; font-weight: 700;">{{ number_format($item->subtotal) }}đ</td>
                                                     </tr>

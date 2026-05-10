@@ -75,10 +75,12 @@
             @foreach($order->items as $index => $item)
                 <div class="item-row {{ $index >= 2 ? 'extra-item-' . $order->order_number : '' }}" style="{{ $index >= 2 ? 'display: none;' : '' }}">
                     <img src="{{ $item->product->image_url ?? asset('images/welcome/tshirt.png') }}" class="item-image">
-                    <div class="item-details">
-                        <div class="item-name">{{ $item->product_name }}</div>
-                        <div class="item-meta">Số lượng: {{ $item->quantity }} | Đơn giá: {{ number_format($item->selling_price) }}đ</div>
-                    </div>
+                        <div class="item-details">
+                            <div class="item-name">{{ $item->product_name }}</div>
+                            <div class="item-meta">
+                                {{ $item->size ? 'Size: ' . $item->size . ' | ' : '' }}Số lượng: {{ $item->quantity }} | Đơn giá: {{ number_format($item->selling_price) }}đ
+                            </div>
+                        </div>
                     <div style="font-weight: 700; color: #0f172a;">{{ number_format($item->selling_price * $item->quantity) }}đ</div>
                 </div>
             @endforeach

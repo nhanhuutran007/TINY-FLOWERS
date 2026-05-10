@@ -8,8 +8,13 @@ class Product extends Model
 {
     protected $fillable = [
         'barcode', 'name', 'description', 'category_id', 'cost_price', 
-        'selling_price', 'material', 'image', 'stock_quantity', 'status'
+        'selling_price', 'material', 'image', 'stock_quantity', 'sizes', 'status'
     ];
+
+    public function getSizesArrayAttribute()
+    {
+        return $this->sizes ? explode(',', $this->sizes) : [];
+    }
 
     protected $appends = ['image_url'];
 

@@ -10,6 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             const id = btn.getAttribute('data-id');
+            const sizes = btn.getAttribute('data-sizes');
+            const url = btn.getAttribute('data-url');
+            
+            // If product has sizes, redirect to detail page to choose size
+            if (sizes && sizes.trim() !== '') {
+                window.location.href = url || `/shop/${id}`;
+                return;
+            }
+
             const name = btn.getAttribute('data-name');
             const price = parseInt(btn.getAttribute('data-price'));
             const image = btn.getAttribute('data-image');

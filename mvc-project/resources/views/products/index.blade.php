@@ -50,6 +50,7 @@
                             <th>Mô tả</th>
                             <th>Danh mục</th>
                             <th>Giá nhập / Bán</th>
+                            <th>Size</th>
                             <th>Kho</th>
                             <th>Trạng thái</th>
                             <th style="text-align: right;">Thao tác</th>
@@ -77,6 +78,17 @@
                                 <td>
                                     <div style="font-size: 12px; text-decoration: line-through; color: #94a3b8;">{{ number_format($product->cost_price) }}đ</div>
                                     <div style="font-weight: 600; color: #10B981;">{{ number_format($product->selling_price) }}đ</div>
+                                </td>
+                                <td>
+                                    @if($product->sizes)
+                                        <div style="display: flex; gap: 4px; flex-wrap: wrap; max-width: 100px;">
+                                            @foreach($product->sizes_array as $sz)
+                                                <span style="background: #eef2ff; color: #4f46e5; border: 1px solid #c7d2fe; padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: 600;">{{ $sz }}</span>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <span style="color: #94a3b8; font-size: 11px;">N/A</span>
+                                    @endif
                                 </td>
                                 <td>
                                     @if($product->stock_quantity <= 0)
@@ -188,6 +200,21 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label>Bảng kích cỡ (Sizes) <span style="color: #94a3b8; font-weight: 400; font-size: 12px;">(Tích chọn các size có sẵn)</span></label>
+                        <div style="display: flex; gap: 20px; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            @foreach(['S', 'M', 'L', 'XL'] as $size)
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500; margin-bottom: 0;">
+                                    <input type="checkbox" name="sizes[]" value="{{ $size }}" class="size-checkbox" style="width: auto;">
+                                    {{ $size }}
+                                </label>
+                            @endforeach
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 500; margin-bottom: 0; margin-left: 10px; border-left: 1px solid #cbd5e1; padding-left: 20px;">
+                                <input type="checkbox" name="sizes[]" value="Free Size" class="size-checkbox" style="width: auto;">
+                                Free Size
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label>Mô tả sản phẩm</label>
                         <textarea name="description" id="pDescription" rows="3" placeholder="Nhập mô tả sản phẩm..."></textarea>
                     </div>
@@ -258,6 +285,15 @@
             document.getElementById('pStock').value = product.stock_quantity;
             document.getElementById('pDescription').value = product.description || '';
             document.getElementById('pStatus').checked = product.status == 1;
+
+            // Reset and set sizes
+            document.querySelectorAll('.size-checkbox').forEach(cb => cb.checked = false);
+            if (product.sizes) {
+                const sizesArray = product.sizes.split(',');
+                document.querySelectorAll('.size-checkbox').forEach(cb => {
+                    if (sizesArray.includes(cb.value)) cb.checked = true;
+                });
+            }
             
             pModal.style.display = 'block';
         }
