@@ -22,23 +22,31 @@ class ChatbotController extends Controller
         }
 
         // Fetch products to provide context
-        $products = Product::where('status', 1)
-            ->select('id', 'name', 'selling_price', 'description', 'image')
+        $products = Product::with('category')
+            ->select('id', 'name', 'selling_price', 'description', 'image', 'category_id', 'material', 'stock_quantity', 'barcode')
             ->get();
 
         $context = "Bạn là trợ lý bán hàng thông minh của Tiny Flowers - thương hiệu thời trang Streetwear cao cấp dành cho Gen Z tại Việt Nam. ";
-        $context .= "Dưới đây là danh sách sản phẩm hiện có tại cửa hàng (Sử dụng thông tin này để tư vấn):\n";
+        $context .= "Dưới đây là danh mục sản phẩm ĐẦY ĐỦ tại cửa hàng (Sử dụng thông tin này để tư vấn chính xác cho khách):\n\n";
         
         foreach ($products as $product) {
-            $context .= "- ID: {$product->id} | Tên: {$product->name} | Giá: " . number_format($product->selling_price, 0, ',', '.') . " VNĐ | Mô tả: {$product->description}\n";
+            $status = $product->stock_quantity > 0 ? "Còn hàng" : "Hết hàng";
+            $category = $product->category->name ?? 'Streetwear';
+            $context .= "- SẢN PHẨM: {$product->name}\n";
+            $context .= "  + ID: {$product->id} | Mã: {$product->barcode}\n";
+            $context .= "  + Danh mục: {$category}\n";
+            $context .= "  + Giá: " . number_format($product->selling_price, 0, ',', '.') . " VNĐ\n";
+            $context .= "  + Chất liệu: {$product->material}\n";
+            $context .= "  + Tình trạng: {$status} (Còn {$product->stock_quantity} cái)\n";
+            $context .= "  + Mô tả: {$product->description}\n\n";
         }
 
-        $context .= "\nNGUYÊN TẮC TRẢ LỜI:
-1. Thân thiện, trẻ trung, sử dụng ngôn ngữ phù hợp với Gen Z.
-2. Khi tư vấn sản phẩm, hãy nhắc chính xác Tên sản phẩm để hệ thống có thể hiển thị thẻ sản phẩm.
-3. Nếu khách hỏi về style, hãy dựa vào mô tả sản phẩm để gợi ý (ví dụ: Boxy, Baggy, Oversize).
-4. Câu trả lời ngắn gọn, sử dụng icon phù hợp.
-5. Nếu không tìm thấy sản phẩm yêu cầu, hãy khéo léo giới thiệu các mẫu Streetwear bán chạy khác của shop.";
+        $context .= "NGUYÊN TẮC TRẢ LỜI:
+1. Thân thiện, trẻ trung, sử dụng ngôn ngữ Gen Z (ví dụ: 'dạ', 'ne', 'nhé', 'xịn xò').
+2. ƯU TIÊN tư vấn dựa trên CHẤT LIỆU và PHONG CÁCH (Boxy, Baggy, Oversize, Cotton...).
+3. Nếu sản phẩm HẾT HÀNG, hãy thông báo khéo léo và gợi ý sản phẩm khác cùng loại.
+4. Khi nhắc tên sản phẩm, hãy viết hoa đúng Tên Sản Phẩm để hệ thống hiển thị thẻ sản phẩm.
+5. Luôn trả lời ngắn gọn, có cấu trúc dễ đọc, sử dụng icon phù hợp.";
 
         try {
             $response = Http::withHeaders([
@@ -120,22 +128,26 @@ class ChatbotController extends Controller
             ->get();
         
         $recentOrders = \App\Models\Order::latest()->take(5)->get();
+        $allProducts = Product::with('category')->get();
 
         $context = "Bạn là Trợ lý AI Quản trị (Admin AI Assistant) của TINY FLOWERS. ";
         $context .= "Nhiệm vụ của bạn là hỗ trợ chủ doanh nghiệp quản lý cửa hàng, phân tích dữ liệu và đề xuất chiến lược kinh doanh.\n\n";
         $context .= "DỮ LIỆU KINH DOANH HIỆN TẠI:\n";
         $context .= "- Tổng doanh thu (Đã giao): " . number_format($totalRevenue, 0, ',', '.') . " VNĐ\n";
         $context .= "- Tổng số đơn hàng: {$totalOrders}\n";
-        $context .= "- Tổng số sản phẩm trong kho: {$totalProducts}\n";
+        $context .= "- Tổng số sản phẩm trong hệ thống: {$totalProducts}\n";
         
         $context .= "\nSẢN PHẨM BÁN CHẠY NHẤT:\n";
         foreach ($topSelling as $item) {
             $context .= "- {$item->product->name}: Bán được {$item->total_quantity} sản phẩm, mang lại " . number_format($item->total_sales, 0, ',', '.') . " VNĐ\n";
         }
 
-        $context .= "\nSẢN PHẨM SẮP HẾT HÀNG (Dưới 10 cái):\n";
-        foreach ($lowStockProducts as $p) {
-            $context .= "- {$p->name} (Còn {$p->stock_quantity} cái)\n";
+        $context .= "\nCHI TIẾT TOÀN BỘ KHO HÀNG (Sử dụng để báo cáo & lập chiến lược):\n";
+        foreach ($allProducts as $p) {
+            $catName = $p->category->name ?? 'N/A';
+            $context .= "- {$p->name} | Mã: {$p->barcode} | Danh mục: {$catName}\n";
+            $context .= "  + Giá vốn: " . number_format($p->cost_price, 0, ',', '.') . "đ | Giá bán: " . number_format($p->selling_price, 0, ',', '.') . "đ\n";
+            $context .= "  + Tồn kho: {$p->stock_quantity} | Chất liệu: {$p->material} | Trạng thái: " . ($p->status ? 'Đang bán' : 'Ngừng bán') . "\n";
         }
 
         $context .= "\nĐƠN HÀNG GẦN ĐÂY:\n";
